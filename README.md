@@ -131,3 +131,52 @@ This repo uses a `.gitattributes` file to normalize line endings:
 - Binary files like images and PDFs are excluded
 
 This ensures consistent diffs and execution, especially for scripts.
+
+
+## 🗺️ System Task Map (STM)
+
+This STM summarizes how to use and maintain your dotfiles across systems.
+
+### 🧱 Foundation
+- **Repo Location:** `~/.dotfiles`
+- **Managed Items:** `.zshrc`, `~/.config/zsh/`, `~/.config/starship/`, etc.
+- **Purpose:** Maintain a clean, modular, version-controlled CLI environment
+
+### 🛠 Initial Setup
+
+```bash
+git clone git@github.com:troy-may/.dotfiles.git ~/.dotfiles
+cd ~/.dotfiles
+chmod +x bootstrap.sh
+./bootstrap.sh
+```
+
+- ✅ Symlinks dotfiles into place
+- ✅ Loads modular `.zshrc` structure
+- ✅ Uses Oh My Zsh + Starship + XDG paths
+
+### 🔁 Ongoing Sync (Other Machines)
+
+```bash
+cd ~/.dotfiles
+git pull
+./bootstrap.sh
+```
+
+- 🔄 Updates configs from GitHub
+- 🔗 Reapplies symlinks if structure changed
+
+### 📦 Optional CLI Tools
+
+Install with:
+
+```bash
+brew install starship zoxide eza bat fzf ripgrep fd tmux
+```
+
+### 📁 Key Repo Files
+
+- `bootstrap.sh` – Setup script
+- `README.md` – Usage and layout
+- `.gitignore` – Clean, commented excludes
+- `.gitattributes` – Enforce LF line endings
