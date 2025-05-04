@@ -120,3 +120,14 @@ Once you add a `.github/workflows/ci.yml` for testing or linting, include this b
 ![CI](https://github.com/troy-may/.dotfiles/actions/workflows/ci.yml/badge.svg)
 ```
 
+
+
+## Line Endings and File Consistency
+
+This repo uses a `.gitattributes` file to normalize line endings:
+
+- All text files use **LF (Unix-style)** endings
+- Prevents issues when editing across macOS, Linux, or Windows
+- Binary files like images and PDFs are excluded
+
+This ensures consistent diffs and execution, especially for scripts.
