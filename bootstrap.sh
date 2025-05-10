@@ -1,32 +1,54 @@
-#!/bin/bash
-# bootstrap.sh — Setup script for dotfiles on a fresh system
+#!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
-echo "🔧 Setting up symbolic links for dotfiles..."
+DOTFILES="$HOME/.dotfiles"
+CONFIG="$HOME/.config"
+ZSHCONFIG="$CONFIG/zsh"
+ZSHENV_TARGET="$ZSHCONFIG/.zshenv"
+ZSHENV_LINK="$HOME/.zshenv"
+ZSHRC_LINK="$HOME/.zshrc"
+ZSHRC_SOURCE="$DOTFILES/.config/zshrc" # optional override target
 
-# Symlink .zshrc
-ln -sf ~/.dotfiles/.zshrc ~/.zshrc
+info()  { echo -e "\033[1;34m[INFO]\033[0m $*"; }
+warn()  { echo -e "\033[1;33m[WARN]\033[0m $*"; }
+error() { echo -e "\033[1;31m[ERROR]\033[0m $*" >&2; }
 
-# Symlink Zsh config directory
-mkdir -p ~/.config
-ln -sf ~/.dotfiles/.config/zsh ~/.config/zsh
+# Ensure ~/.config exists
+mkdir -p "$CONFIG"
 
-# Symlink Starship config
-ln -sf ~/.dotfiles/.config/starship ~/.config/starship
+# Symlink all config files inside ~/.config
+info "Linking modular config files from .dotfiles/.config/"
+find "$DOTFILES/.config" -mindepth 1 -maxdepth 1 -type d | while read -r dir; do
+    base="$(basename "$dir")"
+    target="$CONFIG/$base"
+    if [[ -e "$target" && ! -L "$target" ]]; then
+        warn "Backing up existing $target to $target.bak"
+        mv "$target" "$target.bak"
+    fi
+    ln -snf "$dir" "$target"
+done
 
-# Symlink WezTerm config (if used)
-[ -d ~/.dotfiles/.config/wezterm ] && ln -sf ~/.dotfiles/.config/wezterm ~/.config/wezterm
+# Ensure .zshenv exists and is correct
+info "Ensuring .zshenv exists and is correctly symlinked"
+cat > "$ZSHENV_TARGET" <<'EOF'
+# ~/.config/zsh/.zshenv — baseline shell environment
+export ZDOTDIR="$HOME/.config/zsh"
+export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+EOF
 
-# Set up Git global config (optional)
-[ -f ~/.dotfiles/.gitconfig ] && ln -sf ~/.dotfiles/.gitconfig ~/.gitconfig
+# Symlink to ~/.zshenv so all shells pick it up
+ln -sf "$ZSHENV_TARGET" "$ZSHENV_LINK"
 
-echo "✅ Dotfiles linked."
-echo "📦 Installing Homebrew (macOS only)..."
-
-# Install Homebrew if not present (macOS only)
-if [[ "$OSTYPE" == "darwin"* ]] && ! command -v brew >/dev/null 2>&1; then
-  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+# Ensure .zshrc is symlinked (optional logic)
+if [[ -f "$ZSHCONFIG/.zshrc" ]]; then
+    info "Linking ~/.zshrc to ~/.config/zsh/.zshrc"
+    ln -sf "$ZSHCONFIG/.zshrc" "$ZSHRC_LINK"
+elif [[ -f "$ZSHRC_SOURCE" ]]; then
+    info "Linking ~/.zshrc from optional source: $ZSHRC_SOURCE"
+    ln -sf "$ZSHRC_SOURCE" "$ZSHRC_LINK"
+else
+    warn "~/.zshrc not found in expected locations"
 fi
 
-echo "✅ Bootstrap complete. Please restart your terminal."
+info "Bootstrap complete. Restart your terminal."

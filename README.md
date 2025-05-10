@@ -1,52 +1,104 @@
-# .dotfiles
 
+# .dotfiles
+2.0
 📁 Personal dotfiles setup for macOS (and adaptable to Linux). Clean, modular, and XDG-compliant.
+
+## Overview
+
+This setup uses:
+
+- `~/.dotfiles` for version-controlled configs
+- `~/.config/` for XDG-compliant modular layouts
+- `Oh My Zsh` as the plugin loader
+- `Starship` for prompt rendering
+- `.zshenv` to establish a safe, portable environment on all shells (interactive, login, and script)
 
 ## Structure
 
 ```
 .dotfiles/
-├── bootstrap.sh               # Bootstrap script to link configs and set up system
+├── bootstrap.sh               # Bootstrap: install symlinks and .zshenv
+├── preflight.sh               # Audit environment (ZDOTDIR, PATH, symlinks)
 ├── README.md                  # This file – explains setup and structure
 └── .config/                   # XDG-compliant configuration directory
     ├── zsh/                   # Modular Zsh setup
-    │   ├── aliases.zsh
-    │   ├── env.zsh
-    │   ├── plugins.zsh
-    │   └── functions.zsh
+    │   ├── .zshenv            # Path and ZDOTDIR setup (dotfile required)
+    │   ├── .zshrc             # Main config, sourced via symlink from ~/
+    │   ├── aliases.zsh        # User-defined aliases
+    │   ├── env.zsh            # Environment variables
+    │   ├── plugins.zsh        # Plugin declarations (OMZ plugins=() list)
+    │   └── functions.zsh      # Custom shell functions
     ├── starship/              # Starship prompt config
     │   └── starship.toml
     └── wezterm/               # (Optional) WezTerm terminal config
         └── wezterm.lua
 ```
 
+## Zsh Environment Setup
+
+This dotfiles repo uses `~/.config/zsh/.zshenv` to configure:
+
+- `ZDOTDIR` → redirects zsh to load config from `~/.config/zsh`
+- `$PATH` → ensures core macOS binary locations are always available (`grep`, `uname`, etc.)
+
+### Example: `.zshenv` contents
+
+```zsh
+# ~/.config/zsh/.zshenv
+export ZDOTDIR="$HOME/.config/zsh"
+export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+```
+
+> ✅ You **must** symlink this to `~/.zshenv` for reliable shell behavior:
+```bash
+ln -sf ~/.config/zsh/.zshenv ~/.zshenv
+```
+
 ## Setup
 
-1. Clone the repo:
+### 1. Clone the repo
 
 ```bash
 git clone git@github.com:troy-may/.dotfiles.git ~/.dotfiles
 ```
 
-2. Run the bootstrap script:
+### 2. Run the bootstrap script
 
 ```bash
 cd ~/.dotfiles
 chmod +x bootstrap.sh
 ./bootstrap.sh
-# or
-bash bootstrap.sh
 ```
 
-3. Restart your terminal.
+This will:
 
-## Philosophy
+- Create symlinks from `~/.config/` to `.dotfiles/.config`
+- Install `.zshenv` with stable path and ZDOTDIR logic
+- Symlink `~/.zshenv` → `~/.config/zsh/.zshenv`
+- Symlink `~/.zshrc` → `~/.config/zsh/.zshrc` if present
 
-- ✅ Modular and commented config files
-- ✅ Symlinks via `~/.dotfiles`
-- ✅ Follows XDG base directory spec
-- ✅ Uses `~/.config` for all CLI tools
+### 3. Restart your terminal
 
+---
+
+## Optional: Run Preflight Audit
+
+Before or after running bootstrap, you can run a dry-check of your system:
+
+```bash
+cd ~/.dotfiles
+chmod +x preflight.sh
+./preflight.sh
+```
+
+It will verify:
+
+- `ZDOTDIR` is set
+- `.zshenv` and `.zshrc` symlinks are valid
+- Core macOS binary paths are present in `$PATH`
+- Shell essentials (`grep`, `uname`, `sw_vers`, `file`) are usable
+
+---
 ## Tools in Use
 
 - [Oh My Zsh](https://ohmyz.sh/)
@@ -54,14 +106,11 @@ bash bootstrap.sh
 - [Homebrew](https://brew.sh)
 - [tmux](https://github.com/tmux/tmux)
 
-## License
-
-MIT — use and adapt freely.
-
-
 ## Optional: Install Recommended CLI Tools (macOS with Homebrew)
 
-Once the dotfiles are linked, you can install your favorite CLI tools with:
+Once the dotfiles are linked, you can install your favorite CLI tools:
+
+## Recommended CLI Tools
 
 ```bash
 brew install starship zoxide eza bat fzf ripgrep fd tmux
@@ -69,19 +118,20 @@ brew install starship zoxide eza bat fzf ripgrep fd tmux
 
 ### Tool Descriptions
 
-- `starship` – A fast, customizable prompt
-- `zoxide` – A smarter `cd` command with learning
-- `eza` – A modern replacement for `ls`
-- `bat` – A better `cat` with syntax highlighting
-- `fzf` – Fuzzy finder for searching files/history
-- `ripgrep` – Fast recursive grep
-- `fd` – User-friendly `find`
-- `tmux` – Terminal multiplexer for sessions/splits
+| Tool      | Purpose                              |
+|-----------|--------------------------------------|
+| starship  | Fast, cross-shell prompt             |
+| zoxide    | Smart directory jumper (`cd` on steroids) |
+| eza       | Modern replacement for `ls`          |
+| bat       | Syntax-highlighted `cat`             |
+| fzf       | Fuzzy finder                         |
+| ripgrep   | Fast recursive grep                  |
+| fd        | Simpler `find`                       |
+| tmux      | Terminal multiplexer                 |
 
+---
 
-
-## Syncing Dotfiles Across Machines
-
+## Keeping in Sync Across Machines
 To use this dotfiles setup on another machine (e.g., your laptop):
 
 1. Ensure your SSH key is added to GitHub.
@@ -95,6 +145,7 @@ chmod +x bootstrap.sh
 ```
 
 3. Restart your terminal.
+To update and reapply links:
 
 To keep in sync:
 ```bash
@@ -102,6 +153,7 @@ cd ~/.dotfiles
 git pull origin main
 ./bootstrap.sh  # Re-run if config structure has changed
 ```
+---
 
 ## Optional: Share Zsh History or Scripts
 
@@ -121,7 +173,6 @@ Once you add a `.github/workflows/ci.yml` for testing or linting, include this b
 ```
 
 
-
 ## Line Endings and File Consistency
 
 This repo uses a `.gitattributes` file to normalize line endings:
@@ -133,8 +184,8 @@ This repo uses a `.gitattributes` file to normalize line endings:
 This ensures consistent diffs and execution, especially for scripts.
 
 
-## 🗺️ System Task Map (STM)
 
+## 🧱 System Task Map (STM)
 This STM summarizes how to use and maintain your dotfiles across systems.
 
 ### 🧱 Foundation
@@ -142,6 +193,19 @@ This STM summarizes how to use and maintain your dotfiles across systems.
 - **Managed Items:** `.zshrc`, `~/.config/zsh/`, `~/.config/starship/`, etc.
 - **Purpose:** Maintain a clean, modular, version-controlled CLI environment
 
+
+| Area               | Task                                            |
+|--------------------|-------------------------------------------------|
+| Dotfiles repo      | `~/.dotfiles`                                   |
+| Config directory   | `~/.config/zsh`, `~/.config/starship`, etc.     |
+| ZDOTDIR target     | `~/.config/zsh`                                 |
+| Path setup         | `.zshenv`(linked to home and used by all shells)|
+| Shell prompt       | Starship + `.config/starship/starship.toml`     |
+| Plugin manager     | Oh My Zsh                                       |
+| Optional tools     | via `brew install`                              |
+| Shell audit        | `preflight.sh`                                  |
+
+---
 ### 🛠 Initial Setup
 
 ```bash
@@ -180,3 +244,16 @@ brew install starship zoxide eza bat fzf ripgrep fd tmux
 - `README.md` – Usage and layout
 - `.gitignore` – Clean, commented excludes
 - `.gitattributes` – Enforce LF line endings
+
+## Philosophy
+
+- ✅ Modular and commented config files
+- ✅ Symlinks via `~/.dotfiles`
+- ✅ Follows XDG base directory spec
+- ✅ Uses `~/.config` for all CLI tools
+
+
+
+## License
+
+MIT — use and adapt freely.
