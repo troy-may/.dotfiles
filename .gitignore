@@ -17,11 +17,16 @@
 # =====================
 # Zsh Shell Artifacts
 # =====================
-.config/zsh/.zcompdump*        # Completion dump files
-.config/zsh/*.zwc              # Compiled Zsh wordcode
-.config/zsh/.zsh_sessions/     # Zsh session state
-.config/zsh/.zsh_history       # Zsh command history
-.config/zsh/.zhistory          # Alternate Zsh history file
+/.config/zsh/.zcompdump*        # Completion dump files
+/.config/zsh/*.zwc              # Compiled Zsh wordcode
+/.config/zsh/.zsh_sessions/     # Zsh session state
+/.config/zsh/.zsh_history       # Zsh command history
+/.config/zsh/.zhistory          # Alternate Zsh history file
+
+# =====================
+# Secret / Local Env Files (DO NOT COMMIT)
+# =====================
+/.config/zsh/env.*.zsh          # API keys, tokens, per-machine env
 
 # =====================
 # Bash Shell Artifacts
