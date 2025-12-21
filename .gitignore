@@ -1,4 +1,5 @@
 # .gitignore — Comprehensive, Commented Ignore List for Dotfiles Repository
+# XDG-aware and symlink-safe
 
 # =====================
 # macOS System Metadata
@@ -10,157 +11,84 @@
 .LSOverride           # Launch Services settings
 .apdisk               # Network mount metadata
 
-# =====================
-# Zsh Shell Artifacts
-# =====================
-.zcompdump*           # Completion dump files
-*.zwc                 # Compiled Zsh wordcode
-.zsh_sessions/        # Legacy Zsh sessions
-.config/zsh/sessions/ # Autosaved Zsh sessions
-.zsh_history          # Zsh command history
-.zhistory             # Alt Zsh history log
-# .gitignore — Comprehensive, Commented Ignore List for Dotfiles Repository
-
-# =====================
-# macOS System Metadata
-# =====================
-.DS_Store             # Finder metadata file
-.Trashes              # macOS trash folder
-.Spotlight-V100       # Spotlight indexing files
-.AppleDouble          # Resource fork cache
-.LSOverride           # Launch Services settings
-.apdisk               # Network mount metadata
+# Finder junk inside XDG config tree
+.config/.DS_Store
 
 # =====================
 # Zsh Shell Artifacts
 # =====================
-.zcompdump*           # Completion dump files
-*.zwc                 # Compiled Zsh wordcode
-.zsh_sessions/        # Legacy Zsh sessions
-.config/zsh/sessions/ # Autosaved Zsh sessions
-.zsh_history          # Zsh command history
-.zhistory             # Alt Zsh history log
+.config/zsh/.zcompdump*        # Completion dump files
+.config/zsh/*.zwc              # Compiled Zsh wordcode
+.config/zsh/.zsh_sessions/     # Zsh session state
+.config/zsh/.zsh_history       # Zsh command history
+.config/zsh/.zhistory          # Alternate Zsh history file
 
 # =====================
 # Bash Shell Artifacts
 # =====================
-.bash_history         # Bash history log
-.bash_sessions/       # Bash session state files
+.bash_history                  # Bash history log
+.bash_sessions/                # Bash session state files
 
 # =====================
 # Vim, Nano, and CLI Editors
 # =====================
-*.swp                 # Vim swap files
-*.swo                 # Vim swap (recovered) files
-*~                    # Nano temp/backup files
-.netrwhist            # NetRW plugin history
+*.swp                          # Vim swap files
+*.swo                          # Vim swap (recovered) files
+*~                             # Nano temp/backup files
+.netrwhist                     # NetRW plugin history
 
 # =====================
 # Python Dev Artifacts
 # =====================
-__pycache__/          # Python bytecode cache
-*.py[cod]             # Compiled Python files
-.python_history       # Python REPL history
-.venv/                # Local virtualenv folder
+__pycache__/                   # Python bytecode cache
+*.py[cod]                      # Compiled Python files
+.python_history                # Python REPL history
+.venv/                         # Local virtualenv folder
 env/
 venv/
 
 # =====================
 # Node.js Artifacts
 # =====================
-node_modules/         # Node dependency folder
-.npm/                 # NPM user cache
-package-lock.json     # Lockfile (optional)
-yarn.lock             # Yarn lockfile (optional)
+node_modules/                  # Node dependency folder
+.npm/                          # NPM user cache
+package-lock.json              # Lockfile (optional)
+yarn.lock                      # Yarn lockfile (optional)
 
 # =====================
 # Editor / IDE Metadata
 # =====================
-.vscode/              # VS Code project files
-.idea/                # JetBrains IDE metadata
-*.code-workspace      # VS Code workspace file
+.vscode/                       # VS Code project files
+.idea/                         # JetBrains IDE metadata
+*.code-workspace               # VS Code workspace file
 
 # =====================
 # Generic Temp & Backup Files
 # =====================
-*.log                 # Log files
-*.bak                 # Backup files
-*.tmp                 # Temp files
+*.log                          # Log files
+*.bak                          # Backup files
+*.tmp                          # Temp files
 
 # =====================
 # Secret / Local Env Files (DO NOT COMMIT)
 # =====================
-.config/zsh/env.*.zsh     # API keys, tokens, per-machine env (Anthropic, OpenAI, etc.)
-.env                      # Generic dotenv file
-.env.*                    # Named dotenv variants (e.g. .env.local)
-*.secret                  # Explicit secret files
-*.key                     # Private keys
-*.pem                     # Certificates / private keys
+.config/zsh/env.*.zsh          # API keys, tokens, per-machine env (Anthropic, OpenAI, etc.)
+.env                           # Generic dotenv file
+.env.*                         # Named dotenv variants (e.g. .env.local)
+*.secret                       # Explicit secret files
+*.key                          # Private keys
+*.pem                          # Certificates / private keys
 
 # =====================
 # Env Templates (Allowed)
 # =====================
-!.config/zsh/env.*.zsh.example
+!.config/zsh/env.*.zsh.example # Safe templates with placeholders
 
 # =====================
 # App-Specific or Personal
 # =====================
-.legacy/              # Archived personal configs
-.Trash/               # Local trash dir
-.matplotlib/          # Python plotting config
-.google-cookie        # Google CLI cookie store
-.lmstudio-home-pointer # LM Studio artifact
-# =====================
-# Bash Shell Artifacts
-# =====================
-.bash_history         # Bash history log
-.bash_sessions/       # Bash session state files
-
-# =====================
-# Vim, Nano, and CLI Editors
-# =====================
-*.swp                 # Vim swap files
-*.swo                 # Vim swap (recovered) files
-*~                    # Nano temp/backup files
-.netrwhist            # NetRW plugin history
-
-# =====================
-# Python Dev Artifacts
-# =====================
-__pycache__/          # Python bytecode cache
-*.py[cod]             # Compiled Python files
-.python_history       # Python REPL history
-.venv/                # Local virtualenv folder
-env/
-venv/
-
-# =====================
-# Node.js Artifacts
-# =====================
-node_modules/         # Node dependency folder
-.npm/                 # NPM user cache
-package-lock.json     # Lockfile (optional)
-yarn.lock             # Yarn lockfile (optional)
-
-# =====================
-# Editor/IDE Metadata
-# =====================
-.vscode/              # VSCode project files
-.idea/                # JetBrains IDE metadata
-*.code-workspace      # VSCode workspace file
-
-# =====================
-# Generic Temp & Backup Files
-# =====================
-*.log                 # Log files
-*.bak                 # Backup files
-*.tmp                 # Temp files
-
-# =====================
-# App-Specific or Personal
-# =====================
-.legacy/              # Archived personal configs
-.Trash/               # Local trash dir
-.matplotlib/          # Python plotting config
-.google-cookie        # Google CLI cookie store
-.lmstudio-home-pointer # LM Studio artifact
+.legacy/                       # Archived personal configs
+.Trash/                        # Local trash dir
+.matplotlib/                   # Python plotting config
+.google-cookie                 # Google CLI cookie store
+.lmstudio-home-pointer         # LM Studio artifact
