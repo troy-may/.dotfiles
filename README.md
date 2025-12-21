@@ -1,6 +1,21 @@
 # .dotfiles
-2.1  
-📁 Personal dotfiles setup for macOS (and adaptable to Linux). Clean, modular, and XDG-compliant.
+2.0  
+📁 Personal dotfiles setup for macOS (and adaptable to Linux).  
+Clean, modular, XDG-compliant, and deliberately boring.
+
+This repository is the **source of truth** for my shell and CLI environment.
+It is designed to be predictable, portable, and resilient to entropy over time.
+
+---
+
+## Core Principles
+
+- **Configuration is version-controlled**
+- **State, cache, history, and secrets are never committed**
+- **Symlinks are explicit and intentional**
+- **If `git status` is noisy, something is wrong**
+
+---
 
 ## Overview
 
@@ -10,98 +25,100 @@ This setup uses:
 - `~/.config/` for XDG-compliant modular layouts
 - `Oh My Zsh` as the plugin loader
 - `Starship` for prompt rendering
-- `.zshenv` to establish a safe, portable environment for all shells
-  (interactive, login, and non-interactive)
+- `.zshenv` to establish a safe, portable environment for:
+  - login shells
+  - interactive shells
+  - scripts
+  - subshells
 
-The goal is a **boring, predictable, portable shell environment** that cleanly
-separates configuration from runtime state and secrets.
+The goal is a **boring, predictable shell environment** with clear boundaries
+between config, runtime state, and secrets.
 
 ---
 
-## Structure
-
+## Repository Structure
+```
 .dotfiles/
-├── bootstrap.sh               # Bootstrap: install symlinks and .zshenv
+├── bootstrap.sh               # Install symlinks and base shell wiring
 ├── preflight.sh               # Audit environment (ZDOTDIR, PATH, symlinks)
-├── README.md                  # This file – explains setup and structure
+├── README.md                  # This file (authoritative documentation)
 ├── .gitignore                 # Enforces config vs state vs secrets boundary
+├── .gitattributes             # Line ending normalization
 └── .config/                   # XDG-compliant configuration directory
 ├── zsh/                   # Modular Zsh setup
-│   ├── .zshenv            # Path and ZDOTDIR setup (dotfile required)
-│   ├── .zshrc             # Main config, sourced via symlink from ~/
+│   ├── .zshenv            # Path + ZDOTDIR setup (dotfile)
+│   ├── .zshrc             # Main shell config (symlinked from ~/)
 │   ├── aliases.zsh        # User-defined aliases
-│   ├── env.zsh            # Non-secret shared environment variables
-│   ├── plugins.zsh        # Plugin declarations (OMZ plugins=() list)
+│   ├── env.zsh            # Shared, non-secret environment vars
+│   ├── plugins.zsh        # OMZ plugin declarations
 │   └── functions.zsh      # Custom shell functions
-├── starship/              # Starship prompt config
-│   └── starship.toml
-└── wezterm/               # (Optional) WezTerm terminal config
+├── starship/
+│   └── starship.toml      # Prompt configuration
+└── wezterm/               # Optional terminal config
 └── wezterm.lua
-
+```
 ---
 
-## Zsh Environment Setup
+## Zsh Environment Wiring (Critical)
 
-This dotfiles repo uses `~/.config/zsh/.zshenv` to configure:
+This repo uses `~/.config/zsh/.zshenv` to configure:
 
-- `ZDOTDIR` → redirects Zsh to load config from `~/.config/zsh`
-- `$PATH` → ensures core macOS binary locations are always available
-  (`grep`, `uname`, etc.)
+- `ZDOTDIR` → forces Zsh to load from `~/.config/zsh`
+- `$PATH` → guarantees core macOS binaries are always available
 
-### Example: `.zshenv` contents
+### Example `.zshenv`
 
 ```zsh
 # ~/.config/zsh/.zshenv
 export ZDOTDIR="$HOME/.config/zsh"
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
 
-✅ You must symlink this to ~/.zshenv for reliable shell behavior:
+Required symlink
 
 ln -sf ~/.config/zsh/.zshenv ~/.zshenv
 
-This ensures the environment is correct for:
-	•	login shells
-	•	interactive shells
-	•	scripts
-	•	subshells
+Without this, behavior will diverge across login shells, scripts, and tools.
 
 ⸻
 
-Git Ignore & State Management (Important)
+Git Ignore & State Management (Very Important)
 
 This repository is intentionally strict about what is and is not tracked.
 
-Core Principle
-	•	Configuration is version-controlled
-	•	State, cache, history, and secrets are never committed
+The Rule
+	•	Configuration → committed
+	•	State / cache / history / secrets → ignored
 
 Because this setup uses XDG paths and symlinks
 (~/.config → ~/.dotfiles/.config),
-runtime artifacts can appear inside the git repository path unless they are
-explicitly ignored.
+runtime artifacts can appear inside the repo path unless explicitly ignored.
 
-The .gitignore is therefore a first-class part of the system design.
+The .gitignore is therefore part of the architecture, not an afterthought.
+
+⸻
 
 What Is Ignored (By Design)
-
-The following classes of files are always ignored:
-	•	Zsh runtime artifacts:
+	•	Zsh runtime artifacts
 	•	.zcompdump*
 	•	.zsh_history
 	•	.zsh_sessions/
-	•	Editor and OS noise:
+	•	OS and editor noise
 	•	.DS_Store
 	•	swap / backup files
-	•	Language and tool caches:
-	•	__pycache__/, .venv/, node_modules/, etc.
-	•	Local environment files and secrets
+	•	Tool and language caches
+	•	__pycache__/
+	•	.venv/
+	•	node_modules/
+	•	Local environment and secrets
 
 These files may exist inside the repo path at runtime due to symlinks,
-but they are never meant to be tracked.
+but they must never be tracked.
 
-Local Env Files Pattern
+⸻
 
-Local, secret, or machine-specific environment files follow this pattern:
+Local Env / Secret Files Pattern
+
+All secrets and machine-specific env vars follow this pattern:
 
 ~/.config/zsh/env.<name>.zsh
 
@@ -112,145 +129,161 @@ Examples:
 
 These files are always ignored.
 
-If a shared template is needed, use:
+If a shared reference is needed, use a template:
 
 env.<name>.zsh.example
 
 Templates are explicitly allowed by .gitignore.
 
-Important Git Behavior Note
+⸻
+
+Important Git Behavior (Read Once, Remember Forever)
 
 .gitignore does not affect files that are already tracked.
 
-If a state or secret file ever appears in git status, it means it was
-tracked at some point and must be removed with:
+If a state or secret file appears in git status,
+it means it was tracked at some point and must be removed:
 
 git rm --cached <path>
 
-After that, .gitignore will keep it out permanently.
+Once removed and committed, .gitignore will keep it out permanently.
 
-Summary
-	•	If git status is noisy, something is violating the config/state boundary
-	•	The .gitignore is part of the architecture, not an afterthought
-	•	Treat it as a maintenance-critical file
+If git status is noisy, treat it as a diagnostic signal, not annoyance.
 
 ⸻
 
-Setup
+Security Policy (Tiny but Non-Negotiable)
 
-1. Clone the repo
+This repository must never contain:
+	•	API keys or tokens
+	•	Private keys or certificates
+	•	Shell history
+	•	Session state
+	•	Tool caches
+
+If a secret is accidentally committed:
+	1.	Rotate or revoke it immediately.
+	2.	Assume compromise.
+	3.	Remove it from git history if necessary.
+	4.	Tighten ignore rules to prevent recurrence.
+
+⸻
+
+Git Safety Preflight (Manual Check)
+
+Before committing changes, sanity-check that no forbidden files are tracked:
+
+git ls-files .config/zsh/.zsh_history
+git ls-files .config/zsh/.zcompdump*
+git ls-files .config/zsh/.zsh_sessions
+git ls-files .config/zsh/env.*.zsh
+
+These commands should return no output.
+
+If they do, untrack the file immediately.
+
+⸻
+
+Setup (New Machine)
+
+1. System prerequisites
+	•	Install Xcode Command Line Tools
+
+xcode-select --install
+
+
+	•	Install Homebrew
+https://brew.sh
+
+⸻
+
+2. Clone dotfiles
 
 git clone git@github.com:troy-may/.dotfiles.git ~/.dotfiles
 
-2. Run the bootstrap script
+
+⸻
+
+3. Bootstrap environment
 
 cd ~/.dotfiles
 chmod +x bootstrap.sh
 ./bootstrap.sh
 
 This will:
-	•	Create symlinks from ~/.config/ to .dotfiles/.config
-	•	Install .zshenv with stable PATH and ZDOTDIR logic
-	•	Symlink ~/.zshenv → ~/.config/zsh/.zshenv
-	•	Symlink ~/.zshrc → ~/.config/zsh/.zshrc if present
+	•	Create symlinks from ~/.config/ → .dotfiles/.config
+	•	Install .zshenv and enforce ZDOTDIR
+	•	Symlink:
+	•	~/.zshenv → ~/.config/zsh/.zshenv
+	•	~/.zshrc → ~/.config/zsh/.zshrc
 
-3. Restart your terminal
-
-⸻
-
-Optional: Run Preflight Audit
-
-Before or after running bootstrap, you can run a dry-check of your system:
-
-cd ~/.dotfiles
-chmod +x preflight.sh
-./preflight.sh
-
-It verifies:
-	•	ZDOTDIR is set correctly
-	•	.zshenv and .zshrc symlinks are valid
-	•	Core macOS binary paths are present in $PATH
-	•	Shell essentials (grep, uname, sw_vers, file) are usable
+Restart the terminal afterward.
 
 ⸻
 
-Tools in Use
-	•	Oh My Zsh￼
-	•	Starship Prompt￼
-	•	Homebrew￼
-	•	tmux￼
+4. Verify wiring
+
+echo $ZDOTDIR
+ls -la ~/.zshenv
+ls -la ~/.zshrc
+
+Expected:
+	•	ZDOTDIR=~/.config/zsh
+	•	Both files are symlinks into .dotfiles
 
 ⸻
 
-Optional: Install Recommended CLI Tools (macOS)
+5. Add local secrets (never commit)
+
+touch ~/.config/zsh/env.anthropic.zsh
+
+Repeat per provider as needed.
+
+⸻
+
+6. Install baseline CLI tools (optional)
 
 brew install starship zoxide eza bat fzf ripgrep fd tmux
 
-Tool Descriptions
 
-Tool	Purpose
-starship	Fast, cross-shell prompt
-zoxide	Smart directory jumper
-eza	Modern ls replacement
-bat	Syntax-highlighted cat
-fzf	Fuzzy finder
-ripgrep	Fast recursive grep
-fd	Simpler find
-tmux	Terminal multiplexer
+⸻
 
+7. Final sanity check
+
+git status
+
+Expected result:
+	•	clean working tree
+	•	or only intentional config changes
 
 ⸻
 
 Keeping in Sync Across Machines
 
-To use this setup on another machine:
-
-git clone git@github.com:troy-may/.dotfiles.git ~/.dotfiles
-cd ~/.dotfiles
-chmod +x bootstrap.sh
-./bootstrap.sh
-
-To update later:
+To update an existing setup:
 
 cd ~/.dotfiles
 git pull origin main
 ./bootstrap.sh
 
-
-⸻
-
-Optional: Sharing History or Scripts
-
-Private items like history or personal scripts should be synced explicitly:
-
-rsync -avz ~/.zsh_history your-laptop.local:~/
-rsync -avz ~/.local/bin/ your-laptop.local:~/.local/bin/
-
-
-⸻
-
-Line Endings and File Consistency
-
-This repo uses .gitattributes to normalize line endings:
-	•	All text files use LF (Unix-style)
-	•	Prevents cross-platform diff and execution issues
-	•	Binary files are excluded
+Re-run bootstrap whenever structure changes.
 
 ⸻
 
 Philosophy
-	•	✅ Modular, commented configuration
-	•	✅ Explicit symlink boundaries
-	•	✅ XDG base directory compliance
-	•	✅ Clear separation of config vs state vs secrets
-	•	✅ Predictable git status
+	•	Modular and commented configuration
+	•	Explicit symlink boundaries
+	•	XDG base directory compliance
+	•	Clear separation of config vs state vs secrets
+	•	Predictable Git behavior
+	•	No surprises
 
 ⸻
 
 License
 
-MIT — use and adapt freely.
+MIT — use, adapt, and simplify freely.
 
 ---
-
-This README now **explains the system**, including some hard-won edge cases.
+This README now **captures the system** and the reasoning behind it — in one place,
+no hunting required, including some hard-won edge cases.
