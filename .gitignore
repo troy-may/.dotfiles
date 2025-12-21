@@ -1,99 +1,137 @@
-# .gitignore — Comprehensive, Commented Ignore List for Dotfiles Repository
-# XDG-aware and symlink-safe
+# .gitignore — Comprehensive Ignore List for Dotfiles Repository
+# XDG-aware and symlink-safe. Comments must be full-line (no inline comments).
 
 # =====================
 # macOS System Metadata
 # =====================
-.DS_Store             # Finder metadata file
-.Trashes              # macOS trash folder
-.Spotlight-V100       # Spotlight indexing files
-.AppleDouble          # Resource fork cache
-.LSOverride           # Launch Services settings
-.apdisk               # Network mount metadata
+# Finder metadata file
+.DS_Store
+# macOS trash folder
+.Trashes
+# Spotlight indexing files
+.Spotlight-V100
+# Resource fork cache
+.AppleDouble
+# Launch Services settings
+.LSOverride
+# Network mount metadata
+.apdisk
 
 # Finder junk inside XDG config tree
-.config/.DS_Store
+/.config/.DS_Store
 
 # =====================
 # Zsh Shell Artifacts
 # =====================
-/.config/zsh/.zcompdump*        # Completion dump files
-/.config/zsh/*.zwc              # Compiled Zsh wordcode
-/.config/zsh/.zsh_sessions/     # Zsh session state
-/.config/zsh/.zsh_history       # Zsh command history
-/.config/zsh/.zhistory          # Alternate Zsh history file
-
-# =====================
-# Secret / Local Env Files (DO NOT COMMIT)
-# =====================
-/.config/zsh/env.*.zsh          # API keys, tokens, per-machine env
+# Completion dump files
+/.config/zsh/.zcompdump*
+# Compiled Zsh wordcode
+/.config/zsh/*.zwc
+# Zsh session state
+/.config/zsh/.zsh_sessions/
+# Zsh command history
+/.config/zsh/.zsh_history
+# Alternate Zsh history file
+/.config/zsh/.zhistory
 
 # =====================
 # Bash Shell Artifacts
 # =====================
-.bash_history                  # Bash history log
-.bash_sessions/                # Bash session state files
+# Bash history log
+.bash_history
+# Bash session state files
+.bash_sessions/
 
 # =====================
 # Vim, Nano, and CLI Editors
 # =====================
-*.swp                          # Vim swap files
-*.swo                          # Vim swap (recovered) files
-*~                             # Nano temp/backup files
-.netrwhist                     # NetRW plugin history
+# Vim swap files
+*.swp
+# Vim swap (recovered) files
+*.swo
+# Nano temp/backup files
+*~
+# NetRW plugin history
+.netrwhist
 
 # =====================
 # Python Dev Artifacts
 # =====================
-__pycache__/                   # Python bytecode cache
-*.py[cod]                      # Compiled Python files
-.python_history                # Python REPL history
-.venv/                         # Local virtualenv folder
+# Python bytecode cache
+__pycache__/
+# Compiled Python files
+*.py[cod]
+# Python REPL history
+.python_history
+# Local virtualenv folder
+.venv/
 env/
 venv/
 
 # =====================
 # Node.js Artifacts
 # =====================
-node_modules/                  # Node dependency folder
-.npm/                          # NPM user cache
-package-lock.json              # Lockfile (optional)
-yarn.lock                      # Yarn lockfile (optional)
+# Node dependency folder
+node_modules/
+# NPM user cache
+.npm/
+# Lockfile (optional)
+package-lock.json
+# Yarn lockfile (optional)
+yarn.lock
 
 # =====================
 # Editor / IDE Metadata
 # =====================
-.vscode/                       # VS Code project files
-.idea/                         # JetBrains IDE metadata
-*.code-workspace               # VS Code workspace file
+# VS Code project files
+.vscode/
+# JetBrains IDE metadata
+.idea/
+# VS Code workspace file
+*.code-workspace
 
 # =====================
 # Generic Temp & Backup Files
 # =====================
-*.log                          # Log files
-*.bak                          # Backup files
-*.tmp                          # Temp files
+# Log files
+*.log
+# Backup files
+*.bak
+# Temp files
+*.tmp
 
 # =====================
 # Secret / Local Env Files (DO NOT COMMIT)
 # =====================
-.config/zsh/env.*.zsh          # API keys, tokens, per-machine env (Anthropic, OpenAI, etc.)
-.env                           # Generic dotenv file
-.env.*                         # Named dotenv variants (e.g. .env.local)
-*.secret                       # Explicit secret files
-*.key                          # Private keys
-*.pem                          # Certificates / private keys
+# API keys, tokens, per-machine env (Anthropic, OpenAI, etc.)
+/.config/zsh/env.*.zsh
+# Generic dotenv file
+.env
+# Named dotenv variants (e.g. .env.local)
+.env.*
+# Explicit secret files
+*.secret
+# Private keys
+*.key
+# Certificates / private keys
+*.pem
 
 # =====================
 # Env Templates (Allowed)
 # =====================
-!.config/zsh/env.*.zsh.example # Safe templates with placeholders
+# Safe templates with placeholders
+!/.config/zsh/env.*.zsh.example
 
 # =====================
 # App-Specific or Personal
 # =====================
-.legacy/                       # Archived personal configs
-.Trash/                        # Local trash dir
-.matplotlib/                   # Python plotting config
-.google-cookie                 # Google CLI cookie store
-.lmstudio-home-pointer         # LM Studio artifact
+# Archived personal configs
+.legacy/
+# Local trash dir
+.Trash/
+# Python plotting config
+.matplotlib/
+# Google CLI cookie store
+.google-cookie
+# LM Studio artifact
+.lmstudio-home-pointer
