@@ -1,17 +1,17 @@
-# ~/.config/zsh/plugins.zsh — Oh My Zsh Plugins and Extras
+# ~/.config/zsh/plugins.zsh — Optional Zsh Enhancements
 
 # =====================
-# Plugin List
+# Optional Plugins (Commented Out)
 # =====================
-plugins=(
-  git
-  brew
-  zsh-autosuggestions
-  zsh-syntax-highlighting
-  macos
-)
+# These are available if you want a nicer zsh experience
+# Fish has these built-in, so only needed for zsh fallback
 
-# =====================
-# Plugin Sources (Manual)
-# =====================
-source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+# Autosuggestions (fish-like)
+# if [ -f /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
+#   source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+# fi
+
+# Syntax highlighting
+# if [ -f /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
+#   source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# fi

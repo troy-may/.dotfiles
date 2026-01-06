@@ -43,6 +43,20 @@
 .bash_sessions/
 
 # =====================
+# Fish Shell Artifacts
+# =====================
+# Fish runtime variables (universal vars, abbr cache)
+/.config/fish/fish_variables
+# Fish command history
+/.config/fish/fish_history
+# Fish plugin state
+/.config/fish/conf.d/
+# Fish generated completions
+/.config/fish/completions/
+# Fish theme state
+/.config/fish/themes/
+
+# =====================
 # Vim, Nano, and CLI Editors
 # =====================
 # Vim swap files

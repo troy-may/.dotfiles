@@ -1,86 +1,261 @@
-# Reference: https://github.com/i3/i3/blob/next/etc/config
+# ============================================================
+# AeroSpace configuration
+# Philosophy:
+#   - Arrows = space
+#   - Alt = intent (window management)
+#   - Shift = move
+#   - Ctrl = structure
+#   - Modes only where precision is required (resize)
+#
+# Goal:
+#   Predictable BSP tiling, keyboard-first,
+#   minimal cognitive translation.
+# ============================================================
 
-# i3 doesn't have "normalizations" feature that why we disable them here.
-# But the feature is very helpful.
-# Normalizations eliminate all sorts of weird tree configurations that don't make sense.
-# Give normalizations a chance and enable them back.
-enable-normalization-flatten-containers = false
-enable-normalization-opposite-orientation-for-nested-containers = false
 
-# Mouse follows focus when focused monitor changes
+# ------------------------------------------------------------
+# NORMALIZATION
+# ------------------------------------------------------------
+# Normalization keeps the tree sane by:
+#   - Flattening redundant containers
+#   - Preventing impossible nested orientations
+#
+# This replaces explicit split commands with "join-with".
+# ------------------------------------------------------------
+enable-normalization-flatten-containers = true
+enable-normalization-opposite-orientation-for-nested-containers = true
+
+
+# ------------------------------------------------------------
+# MOUSE BEHAVIOR
+# ------------------------------------------------------------
+# When changing monitors via focus/workspace commands,
+# gently move the mouse to the center of the new monitor.
+# Prevents "lost cursor" syndrome.
+# ------------------------------------------------------------
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
+
+# ============================================================
+# MAIN MODE — everyday operation
+# ============================================================
 [mode.main.binding]
-    # See: https://nikitabobko.github.io/AeroSpace/goodies#open-a-new-window-with-applescript
-    alt-enter = '''exec-and-forget osascript -e '
-    tell application "Terminal"
-        do script
-        activate
-    end tell'
-    '''
 
-    # i3 wraps focus by default
-    alt-j =         'focus --boundaries-action wrap-around-the-workspace left'
-    alt-k =         'focus --boundaries-action wrap-around-the-workspace down'
-    alt-l =         'focus --boundaries-action wrap-around-the-workspace up'
-    alt-semicolon = 'focus --boundaries-action wrap-around-the-workspace right'
+# --------------------------------------------------------
+# FOCUS (navigation)
+# Alt + Arrow
+#
+# Move focus spatially through the BSP tree.
+# Wraps around workspace edges.
+# --------------------------------------------------------
+alt-left  = 'focus --boundaries-action wrap-around-the-workspace left'
+alt-right = 'focus --boundaries-action wrap-around-the-workspace right'
+alt-up    = 'focus --boundaries-action wrap-around-the-workspace up'
+alt-down  = 'focus --boundaries-action wrap-around-the-workspace down'
 
-    alt-shift-j = 'move left'
-    alt-shift-k = 'move down'
-    alt-shift-l = 'move up'
-    alt-shift-semicolon = 'move right'
 
-    # Consider using 'join-with' command as a 'split' replacement if you want to enable
-    # normalizations
-    alt-h = 'split horizontal'
-    alt-v = 'split vertical'
+# --------------------------------------------------------
+# MOVE / REORDER (tree manipulation)
+# Alt + Shift + Arrow
+#
+# Reorders windows in the BSP tree.
+# This does NOT move pixels — it changes structure.
+# --------------------------------------------------------
+alt-shift-left  = 'move left'
+alt-shift-right = 'move right'
+alt-shift-up    = 'move up'
+alt-shift-down  = 'move down'
 
-    alt-f = 'fullscreen'
 
-    alt-s = 'layout v_accordion' # 'layout stacking' in i3
-    alt-w = 'layout h_accordion' # 'layout tabbed' in i3
-    alt-e = 'layout tiles horizontal vertical' # 'layout toggle split' in i3
+# --------------------------------------------------------
+# STRUCTURE (attach / split replacement)
+# Ctrl + Alt + Arrow
+#
+# "join-with" replaces explicit split commands
+# when normalization is enabled.
+#
+# Think:
+#   "Attach this window to that side of the tree."
+# --------------------------------------------------------
+ctrl-alt-left  = 'join-with left'
+ctrl-alt-right = 'join-with right'
+ctrl-alt-up    = 'join-with up'
+ctrl-alt-down  = 'join-with down'
 
-    alt-shift-space = 'layout floating tiling' # 'floating toggle' in i3
 
-    # Not supported, because this command is redundant in AeroSpace mental model.
-    # See: https://nikitabobko.github.io/AeroSpace/guide#floating-windows
-    #alt-space = 'focus toggle_tiling_floating'
+# --------------------------------------------------------
+# LAYOUT MODES
+# --------------------------------------------------------
 
-    # `focus parent`/`focus child` are not yet supported, and it's not clear whether they
-    # should be supported at all https://github.com/nikitabobko/AeroSpace/issues/5
-    # alt-a = 'focus parent'
+# Vertical accordion (stacking)
+# Best for many related windows (mail, browsers, logs)
+alt-s = 'layout v_accordion'
 
-    alt-1 = 'workspace 1'
-    alt-2 = 'workspace 2'
-    alt-3 = 'workspace 3'
-    alt-4 = 'workspace 4'
-    alt-5 = 'workspace 5'
-    alt-6 = 'workspace 6'
-    alt-7 = 'workspace 7'
-    alt-8 = 'workspace 8'
-    alt-9 = 'workspace 9'
-    alt-0 = 'workspace 10'
+# Horizontal accordion (tab-like)
+alt-w = 'layout h_accordion'
 
-    alt-shift-1 = 'move-node-to-workspace 1'
-    alt-shift-2 = 'move-node-to-workspace 2'
-    alt-shift-3 = 'move-node-to-workspace 3'
-    alt-shift-4 = 'move-node-to-workspace 4'
-    alt-shift-5 = 'move-node-to-workspace 5'
-    alt-shift-6 = 'move-node-to-workspace 6'
-    alt-shift-7 = 'move-node-to-workspace 7'
-    alt-shift-8 = 'move-node-to-workspace 8'
-    alt-shift-9 = 'move-node-to-workspace 9'
-    alt-shift-0 = 'move-node-to-workspace 10'
+# Standard tiling
+# Toggles preferred orientation (horizontal / vertical)
+alt-e = 'layout tiles horizontal vertical'
 
-    alt-shift-c = 'reload-config'
 
-    alt-r = 'mode resize'
+# --------------------------------------------------------
+# WINDOW STATE
+# --------------------------------------------------------
 
+# Toggle floating <-> tiling for focused window
+# Floating allows mouse drag/resize when needed
+alt-shift-space = 'layout floating tiling'
+
+# Fullscreen focused window
+alt-enter = 'fullscreen'
+
+
+# --------------------------------------------------------
+# WORKSPACES
+# --------------------------------------------------------
+
+# Switch workspace
+alt-1 = 'workspace 1'
+alt-2 = 'workspace 2'
+alt-3 = 'workspace 3'
+alt-4 = 'workspace 4'
+alt-5 = 'workspace 5'
+alt-6 = 'workspace 6'
+alt-7 = 'workspace 7'
+alt-8 = 'workspace 8'
+alt-9 = 'workspace 9'
+alt-0 = 'workspace 10'
+
+# Move focused window to workspace
+alt-shift-1 = 'move-node-to-workspace 1'
+alt-shift-2 = 'move-node-to-workspace 2'
+alt-shift-3 = 'move-node-to-workspace 3'
+alt-shift-4 = 'move-node-to-workspace 4'
+alt-shift-5 = 'move-node-to-workspace 5'
+alt-shift-6 = 'move-node-to-workspace 6'
+alt-shift-7 = 'move-node-to-workspace 7'
+alt-shift-8 = 'move-node-to-workspace 8'
+alt-shift-9 = 'move-node-to-workspace 9'
+alt-shift-0 = 'move-node-to-workspace 10'
+
+
+# --------------------------------------------------------
+# MODE SWITCHING / MAINTENANCE
+# --------------------------------------------------------
+
+# Enter resize mode
+alt-r = 'mode resize'
+
+# Reload config without restarting AeroSpace
+alt-shift-c = 'reload-config'
+
+
+# ============================================================
+# RESIZE MODE — precision adjustments
+# ============================================================
 [mode.resize.binding]
-    h = 'resize width -50'
-    j = 'resize height +50'
-    k = 'resize height -50'
-    l = 'resize width +50'
-    enter = 'mode main'
-    esc = 'mode main'
+
+# --------------------------------------------------------
+# Arrow keys resize the focused window
+#
+# Left / Right  → width
+# Up / Down     → height
+#
+# Resize is tree-relative, not screen-relative.
+# --------------------------------------------------------
+left  = 'resize width -50'
+right = 'resize width +50'
+up    = 'resize height +50'
+down  = 'resize height -50'
+
+# Exit resize mode
+enter = 'mode main'
+esc   = 'mode main'
+
+
+# ============================================================
+# APP ROUTING / DEFAULT BEHAVIOUR
+# Put these near the end so they’re easy to find and adjust.
+# You can run multiple actions in order.
+# ============================================================
+
+# -----------------------------
+# Browsers → Workspace 1 + accordion
+# -----------------------------
+[[on-window-detected]]
+if.app-id = 'com.apple.Safari'
+run = [
+  'move-node-to-workspace 1',
+  'layout v_accordion',
+]
+
+[[on-window-detected]]
+if.app-id = 'com.google.Chrome'
+run = [
+  'move-node-to-workspace 1',
+  'layout v_accordion',
+]
+
+# -----------------------------
+# Terminals + Editors → Workspace 3 (your “build space”)
+# -----------------------------
+[[on-window-detected]]
+if.app-id = 'com.googlecode.iterm2'
+run = ['move-node-to-workspace 3']
+
+[[on-window-detected]]
+if.app-id = 'com.ghostty' # verify exact app-id if needed
+run = ['move-node-to-workspace 3']
+
+[[on-window-detected]]
+if.app-id = 'com.barebones.bbedit'
+run = ['move-node-to-workspace 3']
+
+[[on-window-detected]]
+if.app-id = 'com.microsoft.VSCode'
+run = ['move-node-to-workspace 3']
+
+# -----------------------------
+# Notes → Workspace 4, optionally floating
+# Start with tiling; if you keep “wanting dead space”, make it floating.
+# -----------------------------
+[[on-window-detected]]
+if.app-id = 'com.apple.Notes'
+run = [
+  'move-node-to-workspace 4',
+  # Uncomment if you decide Notes should always be mouse-friendly:
+  # 'layout floating',
+]
+
+# -----------------------------
+# Messaging → Workspace 5 + accordion (fast scanning)
+# -----------------------------
+[[on-window-detected]]
+if.app-id = 'com.tencent.xinWeChat'
+run = [
+  'move-node-to-workspace 5',
+  'layout v_accordion',
+]
+
+[[on-window-detected]]
+if.app-id = 'net.whatsapp.WhatsApp'
+run = [
+  'move-node-to-workspace 5',
+  'layout v_accordion',
+]
+
+# Optional: Discord / Zoom / FaceTime (less frequent)
+[[on-window-detected]]
+if.app-id = 'com.hnc.Discord'
+run = ['move-node-to-workspace 5']
+
+[[on-window-detected]]
+if.app-id = 'us.zoom.xos'
+run = ['move-node-to-workspace 6']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.FaceTime'
+run = ['move-node-to-workspace 6']
+
+

@@ -1,16 +1,9 @@
-# .zshrc modular file
-
-# =====================
-# Oh My Zsh Settings
-# =====================
-export ZSH="$HOME/.oh-my-zsh"
-ZSH_THEME="amuse"  # Starship used as prompt engine
-
-# =====================
-# Load Core Plugins (Empty Here)
-# =====================
-plugins=()  # Defined in ~/.config/zsh/plugins.zsh
-source $ZSH/oh-my-zsh.sh
+# =====================================================
+# Zsh Configuration - Clean Fallback Shell
+# =====================================================
+# Primary shell: fish (for interactive work)
+# Fallback shell: zsh (for POSIX compatibility, scripts, SSH)
+# =====================================================
 
 # =====================
 # Load Modular Config Files
@@ -20,14 +13,29 @@ for config_file ($HOME/.config/zsh/*.zsh); do
 done
 
 # =====================
-# Prompt Engine
+# Starship Prompt (Unified)
 # =====================
-# export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
-# eval "$(starship init zsh)"
-# Added by Windsurf
-export PATH="/Users/troymay/.codeium/windsurf/bin:$PATH"
+export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
+eval "$(starship init zsh)"
 
-# Added by LM Studio CLI (lms)
+# =====================
+# Zsh Options
+# =====================
+# History
+HISTFILE=~/.config/zsh/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+setopt SHARE_HISTORY
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_SPACE
+
+# Completion
+autoload -Uz compinit && compinit
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'  # Case-insensitive
+
+# =====================
+# Additional Tool Paths
+# =====================
+# LM Studio
 export PATH="$PATH:/Users/troymay/.lmstudio/bin"
-# End of LM Studio CLI section
 
