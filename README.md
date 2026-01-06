@@ -78,8 +78,10 @@ Both shells share:
     │   ├── env.zsh            # Shared environment vars
     │   ├── plugins.zsh        # Optional zsh enhancements
     │   └── functions.zsh      # Custom shell functions
-    └── starship/
-        └── starship.toml      # Unified prompt configuration
+    ├── starship/
+    │   └── starship.toml      # Unified prompt configuration
+    └── ghostty/
+        └── config             # Terminal emulator configuration
 ```
 
 ---

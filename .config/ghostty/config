@@ -1,0 +1,32 @@
+# Ghostty Terminal Configuration
+# https://ghostty.org/docs/config
+#
+# Run `ghostty +show-config --default --docs` to view all available options
+
+# =====================================================
+# Theme
+# =====================================================
+# Matches Starship Mocha palette for consistency
+theme = catppuccin-mocha
+
+# =====================================================
+# Font Configuration (Optional)
+# =====================================================
+# Uncomment to customize:
+# font-family = "JetBrains Mono"
+# font-size = 13
+
+# =====================================================
+# Window Configuration (Optional)
+# =====================================================
+# Uncomment to customize:
+# window-padding-x = 4
+# window-padding-y = 4
+# window-theme = dark
+
+# =====================================================
+# Behavior (Optional)
+# =====================================================
+# Uncomment to customize:
+# copy-on-select = true
+# mouse-hide-while-typing = true
