@@ -48,9 +48,9 @@ between config, runtime state, and secrets.
 
 Both shells share:
 - Starship prompt (unified appearance)
-- pyenv and nvm integration
 - Common aliases and utility functions
 - Same environment variables
+- XDG-compliant configuration structure
 
 ---
 
@@ -93,11 +93,17 @@ Both shells share:
 ### Fish Configuration
 
 Fish config lives in `~/.config/fish/config.fish` and includes:
-- Starship prompt integration
-- Carapace completions (modern command descriptions)
-- pyenv and nvm support
-- Environment variables (XDG paths, editor, locale)
-- Aliases and PATH configuration
+- **PATH configuration (must be first!)** - ensures Homebrew tools are found
+- **Starship prompt integration** - unified prompt with custom config path
+- **Carapace completions** - modern command descriptions using official initialization
+- **Environment variables** - XDG paths, editor, locale
+- **Basic aliases** - navigation, git shortcuts, utilities
+
+**Critical:** PATH must be configured before initializing Starship or Carapace,
+otherwise fish won't find the Homebrew-installed binaries.
+
+**Note:** pyenv and nvm are intentionally disabled by default. They add ~100-200ms
+to shell startup and cause parsing issues. Enable manually if needed.
 
 Fish automatically loads:
 - `~/.config/fish/config.fish` (main config)
@@ -391,22 +397,28 @@ Repeat per provider as needed.
 
 ---
 
-### 8. Configure Version Managers (Optional)
+### 8. Configure Version Managers (Optional - Not Enabled by Default)
 
-**Python (pyenv):**
+**Note:** pyenv and nvm are **intentionally disabled** in the default fish config
+because they add ~100-200ms to shell startup and can cause parsing issues.
+
+**If you need Python version management (pyenv):**
 ```bash
 brew install pyenv
 pyenv install 3.12.0
 pyenv global 3.12.0
+# Then manually uncomment and configure the pyenv section in ~/.config/fish/config.fish
 ```
 
-**Node.js (nvm for zsh, or fisher nvm for fish):**
+**If you need Node.js version management:**
 
-For fish with better nvm integration:
+For fish, use fisher with nvm.fish:
 ```bash
 curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher
 fisher install jorgebucaran/nvm.fish
 ```
+
+For zsh, nvm support is already configured in `env.zsh` but requires manual installation.
 
 ---
 
@@ -550,6 +562,14 @@ MIT — use, adapt, and simplify freely.
 ---
 
 ## Changelog
+
+### 3.1 (2026-01-07)
+- **Fixed:** PATH configuration now loads first in fish config (critical for Homebrew tools)
+- **Fixed:** Carapace initialization uses official syntax per upstream docs
+- **Fixed:** STARSHIP_CONFIG environment variable properly set
+- **Changed:** pyenv and nvm disabled by default (adds 100-200ms startup time)
+- **Improved:** Complete XDG compliance - all configs properly symlinked
+- **Improved:** README documentation updated to match actual working config
 
 ### 3.0 (2026-01-06)
 - **Breaking:** Switched to fish as primary interactive shell

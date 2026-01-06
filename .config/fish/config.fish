@@ -6,32 +6,7 @@
 
 if status is-interactive
     # =====================================================
-    # Starship Prompt
-    # =====================================================
-    starship init fish | source
-
-    # =====================================================
-    # Carapace Completions
-    # =====================================================
-    # Modern completion engine with command descriptions
-    set -gx CARAPACE_BRIDGES 'zsh,fish,bash,inshellisense'
-    mkdir -p ~/.config/fish/completions
-    carapace _carapace | source
-
-    # =====================================================
-    # Environment Variables
-    # =====================================================
-    set -gx EDITOR nvim
-    set -gx VISUAL nvim
-    set -gx LANG en_US.UTF-8
-
-    # XDG Base Directory Specification
-    set -gx XDG_CONFIG_HOME $HOME/.config
-    set -gx XDG_CACHE_HOME $HOME/.cache
-    set -gx XDG_DATA_HOME $HOME/.local/share
-
-    # =====================================================
-    # Path Configuration
+    # Path Configuration (MUST BE FIRST)
     # =====================================================
     # Add common development paths
     fish_add_path $HOME/bin
@@ -47,13 +22,37 @@ if status is-interactive
     fish_add_path $HOME/.lmstudio/bin
 
     # =====================================================
+    # Environment Variables
+    # =====================================================
+    set -gx EDITOR nvim
+    set -gx VISUAL nvim
+    set -gx LANG en_US.UTF-8
+
+    # XDG Base Directory Specification
+    set -gx XDG_CONFIG_HOME $HOME/.config
+    set -gx XDG_CACHE_HOME $HOME/.cache
+    set -gx XDG_DATA_HOME $HOME/.local/share
+
+    # =====================================================
+    # Starship Prompt
+    # =====================================================
+    set -gx STARSHIP_CONFIG $HOME/.config/starship/starship.toml
+    starship init fish | source
+
+    # =====================================================
+    # Carapace Completions
+    # =====================================================
+    # Modern completion engine with command descriptions
+    set -Ux CARAPACE_BRIDGES 'zsh,fish,bash,inshellisense'
+    carapace _carapace | source
+
+    # =====================================================
     # Python Environment (pyenv)
     # =====================================================
-    set -gx PYENV_ROOT $HOME/.pyenv
-    fish_add_path $PYENV_ROOT/bin
-    if command -v pyenv >/dev/null
-        pyenv init - | source
-    end
+    # Commented out - pyenv init causes issues with fish
+    # If needed, install pyenv and add manually:
+    # set -gx PYENV_ROOT $HOME/.pyenv
+    # fish_add_path $PYENV_ROOT/bin
 
     # =====================================================
     # Node Version Manager (nvm)
