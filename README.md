@@ -81,7 +81,9 @@ Both shells share:
     ├── starship/
     │   └── starship.toml      # Unified prompt configuration
     └── ghostty/
-        └── config             # Terminal emulator configuration
+        ├── config             # Terminal emulator configuration
+        └── themes/            # Custom color schemes
+            └── My Custom Dark # Example custom theme
 ```
 
 ---
@@ -123,6 +125,35 @@ The modular zsh config follows this loading order:
 4. `aliases.zsh` (command aliases)
 5. `functions.zsh` (shell functions)
 6. `plugins.zsh` (optional enhancements - currently minimal)
+
+### Ghostty Terminal Configuration
+
+Ghostty config lives in `~/.config/ghostty/config` and includes:
+- Theme configuration (Catppuccin Mocha to match Starship)
+- Font settings (optional)
+- Window and behavior preferences
+
+Ghostty respects XDG paths natively—no symlinks needed.
+
+**Custom themes:**
+- Location: `~/.config/ghostty/themes/`
+- Create custom color schemes as simple config files
+- List all themes: `ghostty +list-themes`
+- Custom themes show as "(user)" in the theme list
+
+**Theme file format:**
+```bash
+# Example: ~/.config/ghostty/themes/My Theme
+palette = 0=#000000  # Black
+palette = 1=#ff0000  # Red
+# ... 16 ANSI colors (0-15)
+background = #1e1e2e
+foreground = #cdd6f4
+cursor-color = #f5e0dc
+selection-background = #585b70
+```
+
+Ghostty will automatically detect themes in the `themes/` directory.
 
 ---
 
