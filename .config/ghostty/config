@@ -7,7 +7,7 @@
 # Theme
 # =====================================================
 # Matches Starship Mocha palette for consistency
-theme = catppuccin-mocha
+theme = Catppuccin Mocha
 
 # =====================================================
 # Font Configuration (Optional)
