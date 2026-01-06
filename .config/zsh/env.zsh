@@ -28,8 +28,10 @@ command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 
 # =====================
-# Node Version Manager (nvm)
+# Node Version Manager (fnm)
 # =====================
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+# Fast Node Manager - cross-shell compatible (replaces nvm)
+# Automatically switches Node versions based on .node-version or .nvmrc files
+if command -v fnm >/dev/null 2>&1; then
+    eval "$(fnm env --use-on-cd)"
+fi

@@ -1,5 +1,5 @@
 # .dotfiles
-3.0
+3.2
 📁 Personal dotfiles setup for macOS (and adaptable to Linux).
 Clean, modular, XDG-compliant, and deliberately boring.
 
@@ -65,25 +65,28 @@ Both shells share:
 ├── .gitattributes             # Line ending normalization
 └── .config/                   # XDG-compliant configuration directory
     ├── fish/                  # Fish shell configuration (primary)
-    │   ├── config.fish        # Main fish config
-    │   ├── functions/         # Fish functions (mkcd, extract, etc.)
-    │   │   ├── mkcd.fish
-    │   │   ├── extract.fish
-    │   │   └── backup_dotfiles.fish
+    │   ├── config.fish        # Main fish config (pyenv + fnm enabled)
+    │   ├── functions/         # Fish functions
+    │   │   ├── mkcd.fish      # Create directory and cd into it
+    │   │   ├── extract.fish   # Extract any archive format
+    │   │   ├── backup_dotfiles.fish  # Backup dotfiles directory
+    │   │   └── br.fish        # Broot integration (auto-generated)
     │   └── completions/       # Carapace-generated completions
     ├── zsh/                   # Zsh configuration (fallback)
     │   ├── .zshenv            # Path + ZDOTDIR setup
     │   ├── .zshrc             # Main shell config
     │   ├── aliases.zsh        # User-defined aliases
-    │   ├── env.zsh            # Shared environment vars
+    │   ├── env.zsh            # Shared environment vars (pyenv + fnm)
     │   ├── plugins.zsh        # Optional zsh enhancements
     │   └── functions.zsh      # Custom shell functions
     ├── starship/
     │   └── starship.toml      # Unified prompt configuration
-    └── ghostty/
-        ├── config             # Terminal emulator configuration
-        └── themes/            # Custom color schemes
-            └── My Custom Dark # Example custom theme
+    ├── ghostty/
+    │   ├── config             # Terminal emulator configuration
+    │   └── themes/            # Custom color schemes
+    │       └── My Custom Dark # Example custom theme
+    └── aerospace/
+        └── aerospace.toml     # AeroSpace tiling window manager config
 ```
 
 ---
@@ -102,8 +105,8 @@ Fish config lives in `~/.config/fish/config.fish` and includes:
 **Critical:** PATH must be configured before initializing Starship or Carapace,
 otherwise fish won't find the Homebrew-installed binaries.
 
-**Note:** pyenv and nvm are intentionally disabled by default. They add ~100-200ms
-to shell startup and cause parsing issues. Enable manually if needed.
+**Note:** pyenv and fnm (Fast Node Manager) are now enabled by default and configured
+for cross-shell compatibility. Version managers share state between Fish and Zsh.
 
 Fish automatically loads:
 - `~/.config/fish/config.fish` (main config)
@@ -310,6 +313,9 @@ git clone git@github.com:troy-may/.dotfiles.git ~/.dotfiles
 # Essential shells and tools
 brew install fish zsh starship carapace
 
+# Version managers (Python and Node.js)
+brew install pyenv fnm
+
 # Optional but recommended (modern CLI tools)
 brew install ripgrep fd bat eza zoxide fzf
 ```
@@ -397,28 +403,39 @@ Repeat per provider as needed.
 
 ---
 
-### 8. Configure Version Managers (Optional - Not Enabled by Default)
+### 8. Version Managers (Cross-Shell Compatible)
 
-**Note:** pyenv and nvm are **intentionally disabled** in the default fish config
-because they add ~100-200ms to shell startup and can cause parsing issues.
+**pyenv (Python) and fnm (Node.js) are now enabled by default** with cross-shell
+compatibility. Both tools work identically in Fish and Zsh, sharing installed versions.
 
-**If you need Python version management (pyenv):**
+**Architecture:**
+- **pyenv**: Uses shims in `~/.pyenv/shims/` that intercept `python` and `pip` commands
+- **fnm**: Uses environment PATH manipulation to make Node versions available
+- Both store versions in their respective home directories (shared across shells)
+- Switching shells maintains the same Python and Node versions
+
+**Already configured in:**
+- Fish: `~/.config/fish/config.fish`
+- Zsh: `~/.config/zsh/env.zsh`
+
+**To install Python versions:**
 ```bash
-brew install pyenv
 pyenv install 3.12.0
 pyenv global 3.12.0
-# Then manually uncomment and configure the pyenv section in ~/.config/fish/config.fish
+python --version  # Works in both fish and zsh
 ```
 
-**If you need Node.js version management:**
-
-For fish, use fisher with nvm.fish:
+**To install Node versions:**
 ```bash
-curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher
-fisher install jorgebucaran/nvm.fish
+fnm install 20        # Install Node 20 LTS
+fnm use 20            # Activate Node 20
+fnm default 20        # Set as default
+node --version        # Works in both fish and zsh
 ```
 
-For zsh, nvm support is already configured in `env.zsh` but requires manual installation.
+**Auto-switching with project files:**
+- fnm automatically switches Node versions when you `cd` into a directory with `.node-version` or `.nvmrc`
+- pyenv automatically switches Python versions when you `cd` into a directory with `.python-version`
 
 ---
 
@@ -562,6 +579,15 @@ MIT — use, adapt, and simplify freely.
 ---
 
 ## Changelog
+
+### 3.2 (2026-01-07)
+- **Added:** Cross-shell compatible version managers (pyenv + fnm)
+- **Breaking:** Replaced nvm with fnm (Fast Node Manager) for Node.js version management
+- **Changed:** pyenv now enabled by default in both Fish and Zsh
+- **Changed:** fnm replaces nvm - automatically migrates to `.node-version` and `.nvmrc` files
+- **Improved:** Version managers now share state between Fish and Zsh shells
+- **Improved:** Auto-switching Node/Python versions when entering directories with version files
+- **Updated:** Installation instructions include pyenv and fnm in core tools
 
 ### 3.1 (2026-01-07)
 - **Fixed:** PATH configuration now loads first in fish config (critical for Homebrew tools)

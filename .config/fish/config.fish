@@ -49,18 +49,21 @@ if status is-interactive
     # =====================================================
     # Python Environment (pyenv)
     # =====================================================
-    # Commented out - pyenv init causes issues with fish
-    # If needed, install pyenv and add manually:
-    # set -gx PYENV_ROOT $HOME/.pyenv
-    # fish_add_path $PYENV_ROOT/bin
+    # Cross-shell compatible Python version manager
+    if test -d $HOME/.pyenv
+        set -gx PYENV_ROOT $HOME/.pyenv
+        fish_add_path $PYENV_ROOT/bin
+        status --is-interactive; and pyenv init - | source
+    end
 
     # =====================================================
-    # Node Version Manager (nvm)
+    # Node Version Manager (fnm)
     # =====================================================
-    # For fish, use bass or the fisher nvm plugin for best results
-    # Install: fisher install jorgebucaran/nvm.fish
-    # Or use bass: fisher install edc/bass
-    # For now, using basic nvm support
+    # Fast Node Manager - cross-shell compatible (replaces nvm)
+    # Automatically switches Node versions based on .node-version or .nvmrc files
+    if command -v fnm >/dev/null
+        fnm env --use-on-cd | source
+    end
 
     # =====================================================
     # Basic Aliases
