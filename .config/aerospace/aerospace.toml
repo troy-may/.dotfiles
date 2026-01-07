@@ -174,88 +174,88 @@ enter = 'mode main'
 esc   = 'mode main'
 
 
-# ============================================================
-# APP ROUTING / DEFAULT BEHAVIOUR
-# Put these near the end so they’re easy to find and adjust.
-# You can run multiple actions in order.
-# ============================================================
-
-# -----------------------------
-# Browsers → Workspace 1 + accordion
-# -----------------------------
-[[on-window-detected]]
-if.app-id = 'com.apple.Safari'
-run = [
-  'move-node-to-workspace 1',
-  'layout v_accordion',
-]
-
-[[on-window-detected]]
-if.app-id = 'com.google.Chrome'
-run = [
-  'move-node-to-workspace 1',
-  'layout v_accordion',
-]
-
-# -----------------------------
-# Terminals + Editors → Workspace 3 (your “build space”)
-# -----------------------------
-[[on-window-detected]]
-if.app-id = 'com.googlecode.iterm2'
-run = ['move-node-to-workspace 3']
-
-[[on-window-detected]]
-if.app-id = 'com.ghostty' # verify exact app-id if needed
-run = ['move-node-to-workspace 3']
-
-[[on-window-detected]]
-if.app-id = 'com.barebones.bbedit'
-run = ['move-node-to-workspace 3']
-
-[[on-window-detected]]
-if.app-id = 'com.microsoft.VSCode'
-run = ['move-node-to-workspace 3']
-
-# -----------------------------
-# Notes → Workspace 4, optionally floating
-# Start with tiling; if you keep “wanting dead space”, make it floating.
-# -----------------------------
-[[on-window-detected]]
-if.app-id = 'com.apple.Notes'
-run = [
-  'move-node-to-workspace 4',
-  # Uncomment if you decide Notes should always be mouse-friendly:
-  # 'layout floating',
-]
-
-# -----------------------------
-# Messaging → Workspace 5 + accordion (fast scanning)
-# -----------------------------
-[[on-window-detected]]
-if.app-id = 'com.tencent.xinWeChat'
-run = [
-  'move-node-to-workspace 5',
-  'layout v_accordion',
-]
-
-[[on-window-detected]]
-if.app-id = 'net.whatsapp.WhatsApp'
-run = [
-  'move-node-to-workspace 5',
-  'layout v_accordion',
-]
-
-# Optional: Discord / Zoom / FaceTime (less frequent)
-[[on-window-detected]]
-if.app-id = 'com.hnc.Discord'
-run = ['move-node-to-workspace 5']
-
-[[on-window-detected]]
-if.app-id = 'us.zoom.xos'
-run = ['move-node-to-workspace 6']
-
-[[on-window-detected]]
-if.app-id = 'com.apple.FaceTime'
-run = ['move-node-to-workspace 6']
+# # ============================================================
+# # APP ROUTING / DEFAULT BEHAVIOUR
+# # Put these near the end so they’re easy to find and adjust.
+# # You can run multiple actions in order.
+# # ============================================================
+# 
+# # -----------------------------
+# # Browsers → Workspace 1 + accordion
+# # -----------------------------
+# [[on-window-detected]]
+# if.app-id = 'com.apple.Safari'
+# run = [
+#   'move-node-to-workspace 1',
+#   'layout v_accordion',
+# ]
+# 
+# [[on-window-detected]]
+# if.app-id = 'com.google.Chrome'
+# run = [
+#   'move-node-to-workspace 1',
+#   'layout v_accordion',
+# ]
+# 
+# # -----------------------------
+# # Terminals + Editors → Workspace 3 (your “build space”)
+# # -----------------------------
+# [[on-window-detected]]
+# if.app-id = 'com.googlecode.iterm2'
+# run = ['move-node-to-workspace 3']
+# 
+# [[on-window-detected]]
+# if.app-id = 'com.ghostty' # verify exact app-id if needed
+# run = ['move-node-to-workspace 3']
+# 
+# [[on-window-detected]]
+# if.app-id = 'com.barebones.bbedit'
+# run = ['move-node-to-workspace 3']
+# 
+# [[on-window-detected]]
+# if.app-id = 'com.microsoft.VSCode'
+# run = ['move-node-to-workspace 3']
+# 
+# # -----------------------------
+# # Notes → Workspace 4, optionally floating
+# # Start with tiling; if you keep “wanting dead space”, make it floating.
+# # -----------------------------
+# [[on-window-detected]]
+# if.app-id = 'com.apple.Notes'
+# run = [
+#   'move-node-to-workspace 4',
+#   # Uncomment if you decide Notes should always be mouse-friendly:
+#   # 'layout floating',
+# ]
+# 
+# # -----------------------------
+# # Messaging → Workspace 5 + accordion (fast scanning)
+# # -----------------------------
+# [[on-window-detected]]
+# if.app-id = 'com.tencent.xinWeChat'
+# run = [
+#   'move-node-to-workspace 5',
+#   'layout v_accordion',
+# ]
+# 
+# [[on-window-detected]]
+# if.app-id = 'net.whatsapp.WhatsApp'
+# run = [
+#   'move-node-to-workspace 5',
+#   'layout v_accordion',
+# ]
+# 
+# # Optional: Discord / Zoom / FaceTime (less frequent)
+# [[on-window-detected]]
+# if.app-id = 'com.hnc.Discord'
+# run = ['move-node-to-workspace 5']
+# 
+# [[on-window-detected]]
+# if.app-id = 'us.zoom.xos'
+# run = ['move-node-to-workspace 6']
+# 
+# [[on-window-detected]]
+# if.app-id = 'com.apple.FaceTime'
+# run = ['move-node-to-workspace 6']
 
 
