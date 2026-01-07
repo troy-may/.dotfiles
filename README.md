@@ -1,5 +1,5 @@
 # .dotfiles
-3.3
+3.3.1
 📁 Personal dotfiles setup for macOS (and adaptable to Linux).
 Clean, modular, XDG-compliant, and deliberately boring.
 
@@ -581,6 +581,11 @@ MIT — use, adapt, and simplify freely.
 ---
 
 ## Changelog
+
+### 3.3.1 (2026-01-07)
+- **Fixed:** Critical bug - renamed `path` alias to `showpath` to avoid conflict with Fish builtin
+- **Fixed:** fzf integration was broken due to `path` builtin override causing tr errors
+- **Note:** Fish has a built-in `path` command used for path manipulation - don't override it!
 
 ### 3.3 (2026-01-07)
 - **Added:** fzf (fuzzy finder) integration with official Fish key bindings

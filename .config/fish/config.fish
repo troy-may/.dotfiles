@@ -118,7 +118,8 @@ if status is-interactive
     alias vi nvim
 
     # Utilities
-    alias path 'echo $PATH | tr " " "\n"'
+    # Note: 'path' is a Fish builtin - don't override it!
+    alias showpath 'echo $PATH | tr " " "\n"'
 
     # =====================================================
     # Fish-Specific Settings
