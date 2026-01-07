@@ -66,6 +66,33 @@ if status is-interactive
     end
 
     # =====================================================
+    # fzf - Fuzzy Finder
+    # =====================================================
+    # Official Fish integration for fzf
+    if command -v fzf >/dev/null
+        # Use fd for better file finding (respects .gitignore)
+        if command -v fd >/dev/null
+            set -gx FZF_DEFAULT_COMMAND 'fd --type f --hidden --follow --exclude .git'
+            set -gx FZF_CTRL_T_COMMAND "$FZF_DEFAULT_COMMAND"
+        end
+
+        # Initialize fzf key bindings and completions
+        fzf --fish | source
+    end
+
+    # =====================================================
+    # bat - Better cat
+    # =====================================================
+    # Syntax highlighting for file viewing
+    if command -v bat >/dev/null
+        alias cat 'bat --style=auto'
+        alias catt '/bin/cat'  # Keep original cat available
+
+        # bat with plain style (no line numbers, git info)
+        alias batp 'bat --style=plain'
+    end
+
+    # =====================================================
     # Basic Aliases
     # =====================================================
     # Navigation

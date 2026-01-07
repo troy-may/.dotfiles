@@ -1,5 +1,5 @@
 # .dotfiles
-3.2
+3.3
 📁 Personal dotfiles setup for macOS (and adaptable to Linux).
 Clean, modular, XDG-compliant, and deliberately boring.
 
@@ -65,7 +65,7 @@ Both shells share:
 ├── .gitattributes             # Line ending normalization
 └── .config/                   # XDG-compliant configuration directory
     ├── fish/                  # Fish shell configuration (primary)
-    │   ├── config.fish        # Main fish config (pyenv + fnm enabled)
+    │   ├── config.fish        # Main fish config (fzf, bat, pyenv, fnm)
     │   ├── functions/         # Fish functions
     │   │   ├── mkcd.fish      # Create directory and cd into it
     │   │   ├── extract.fish   # Extract any archive format
@@ -99,6 +99,8 @@ Fish config lives in `~/.config/fish/config.fish` and includes:
 - **PATH configuration (must be first!)** - ensures Homebrew tools are found
 - **Starship prompt integration** - unified prompt with custom config path
 - **Carapace completions** - modern command descriptions using official initialization
+- **fzf integration** - fuzzy finder with Ctrl-T, Ctrl-R, Alt-C key bindings
+- **bat integration** - syntax-highlighted file viewing (replaces cat)
 - **Environment variables** - XDG paths, editor, locale
 - **Basic aliases** - navigation, git shortcuts, utilities
 
@@ -579,6 +581,13 @@ MIT — use, adapt, and simplify freely.
 ---
 
 ## Changelog
+
+### 3.3 (2026-01-07)
+- **Added:** fzf (fuzzy finder) integration with official Fish key bindings
+- **Added:** bat (syntax-highlighted cat) as default file viewer
+- **Improved:** File navigation with Ctrl-T (find files), Ctrl-R (history), Alt-C (directories)
+- **Improved:** Enhanced file viewing with automatic syntax highlighting and git integration
+- **Changed:** `cat` command now aliases to `bat` (original available as `catt`)
 
 ### 3.2 (2026-01-07)
 - **Added:** Cross-shell compatible version managers (pyenv + fnm)
