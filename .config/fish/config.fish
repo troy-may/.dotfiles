@@ -76,6 +76,14 @@ if status is-interactive
             set -gx FZF_CTRL_T_COMMAND "$FZF_DEFAULT_COMMAND"
         end
 
+        # Better fzf defaults
+        set -gx FZF_DEFAULT_OPTS '--height 40% --layout=reverse --border --info=inline'
+
+        # Ctrl-T preview with bat (if available)
+        if command -v bat >/dev/null
+            set -gx FZF_CTRL_T_OPTS "--preview 'bat --color=always --style=numbers --line-range=:100 {}' --preview-window=right:60%:wrap"
+        end
+
         # Initialize fzf key bindings and completions
         fzf --fish | source
     end

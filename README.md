@@ -1,5 +1,5 @@
 # .dotfiles
-3.3.1
+3.3.2
 📁 Personal dotfiles setup for macOS (and adaptable to Linux).
 Clean, modular, XDG-compliant, and deliberately boring.
 
@@ -581,6 +581,12 @@ MIT — use, adapt, and simplify freely.
 ---
 
 ## Changelog
+
+### 3.3.2 (2026-01-07)
+- **Fixed:** Ghostty Option key now sends Alt/Meta for fzf Alt-C keybinding
+- **Added:** fzf preview with bat (shows file contents in right pane)
+- **Improved:** Better fzf defaults (border, reverse layout, inline info)
+- **Note:** Requires Ghostty restart for Option key fix to take effect
 
 ### 3.3.1 (2026-01-07)
 - **Fixed:** Critical bug - renamed `path` alias to `showpath` to avoid conflict with Fish builtin
