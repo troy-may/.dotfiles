@@ -32,6 +32,28 @@ find "$DOTFILES/.config" -mindepth 1 -maxdepth 1 -type d | while read -r dir; do
 done
 
 # =====================================================
+# Git Hooks Setup
+# =====================================================
+info "Installing git hooks for repository safety..."
+
+HOOKS_DIR="$DOTFILES/hooks"
+GIT_HOOKS_DIR="$DOTFILES/.git/hooks"
+
+if [[ -d "$HOOKS_DIR" ]]; then
+    for hook in "$HOOKS_DIR"/*; do
+        if [[ -f "$hook" && -x "$hook" ]]; then
+            hook_name="$(basename "$hook")"
+            target="$GIT_HOOKS_DIR/$hook_name"
+            cp "$hook" "$target"
+            chmod +x "$target"
+            info "✓ Installed $hook_name hook"
+        fi
+    done
+else
+    warn "Hooks directory not found at $HOOKS_DIR"
+fi
+
+# =====================================================
 # Zsh Setup (Fallback Shell)
 # =====================================================
 info "Setting up Zsh (fallback shell)..."
