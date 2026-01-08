@@ -37,5 +37,5 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'  # Case-insensitive
 # Additional Tool Paths
 # =====================
 # LM Studio
-export PATH="$PATH:/Users/troymay/.lmstudio/bin"
+export PATH="$PATH:$HOME/.lmstudio/bin"
 
