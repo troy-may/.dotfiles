@@ -1,5 +1,5 @@
 # .dotfiles
-3.3.2
+3.4.2
 📁 Personal dotfiles setup for macOS (and adaptable to Linux).
 Clean, modular, XDG-compliant, and deliberately boring.
 
@@ -63,6 +63,9 @@ Both shells share:
 ├── README.md                  # This file (authoritative documentation)
 ├── .gitignore                 # Enforces config vs state vs secrets boundary
 ├── .gitattributes             # Line ending normalization
+├── hooks/                     # Git hooks for repository safety
+│   ├── pre-commit             # Prevents committing state/secret files
+│   └── README.md              # Hook documentation
 └── .config/                   # XDG-compliant configuration directory
     ├── fish/                  # Fish shell configuration (primary)
     │   ├── config.fish        # Main fish config (fzf, bat, pyenv, fnm)
@@ -181,6 +184,22 @@ runtime artifacts can appear inside the repo path unless explicitly ignored.
 
 The `.gitignore` is therefore **part of the architecture**, not an afterthought.
 
+### Automated Protection with Pre-Commit Hook
+
+A pre-commit hook automatically blocks commits containing forbidden files:
+- macOS artifacts (`.DS_Store`, `.Trashes`, etc.)
+- Shell state/history (`.zsh_history`, `.bash_history`, `.zsh_sessions/`)
+- Fish state (`fish_variables`, `fish_history`)
+- Secrets (`.env`, `.key`, `.pem`, `env.*.zsh`)
+- Editor/IDE artifacts (`.vscode/`, `.idea/`, `.swp`)
+- Language artifacts (`__pycache__/`, `node_modules/`)
+- Temp/backup files (`.log`, `.bak`, `.tmp`)
+
+The hook provides clear error messages and remediation steps when violations are detected.
+It's installed automatically by `bootstrap.sh` and cannot be bypassed with `git add -f`.
+
+See `hooks/README.md` for full documentation.
+
 ---
 
 ### What Is Ignored (By Design)
@@ -267,9 +286,10 @@ If a secret is accidentally committed:
 
 ---
 
-## Git Safety Preflight (Manual Check)
+## Git Safety Preflight
 
-Before committing changes, sanity-check that no forbidden files are tracked:
+The pre-commit hook automatically prevents commits of forbidden files, but you can
+manually verify that no state/secret files are currently tracked:
 
 ```bash
 git ls-files .config/zsh/.zsh_history
@@ -281,7 +301,10 @@ git ls-files .config/fish/fish_variables
 
 These commands should return **no output**.
 
-If they do, untrack the file immediately.
+If they do, untrack the file immediately:
+```bash
+git rm --cached <file>
+```
 
 ---
 
@@ -346,6 +369,7 @@ chmod +x bootstrap.sh
 
 This will:
 - Create symlinks from `~/.config/` → `.dotfiles/.config`
+- Install git hooks for repository safety (pre-commit)
 - Install `.zshenv` and enforce `ZDOTDIR`
 - Symlink:
   - `~/.zshenv` → `~/.config/zsh/.zshenv`
@@ -581,6 +605,27 @@ MIT — use, adapt, and simplify freely.
 ---
 
 ## Changelog
+
+### 3.4.2 (2026-01-08)
+- **Fixed:** Hardcoded username path in .zshrc replaced with $HOME variable
+- **Improved:** Better portability across machines
+
+### 3.4.1 (2026-01-08)
+- **Fixed:** Regex patterns in pre-commit hook (removed invalid leading asterisks)
+- **Fixed:** Hook now runs without grep errors
+
+### 3.4 (2026-01-08)
+- **Added:** Git pre-commit hook to automatically prevent commits of state/secret files
+- **Added:** `hooks/` directory with version-controlled pre-commit hook
+- **Added:** Comprehensive protection against committing forbidden files
+- **Updated:** `bootstrap.sh` now automatically installs git hooks
+- **Improved:** Clear error messages and remediation steps when violations detected
+- **Security:** Hook cannot be bypassed with `git add -f`
+
+### 3.3.3 (2026-01-08)
+- **Fixed:** Removed accidentally tracked `.DS_Store` and zsh session files from repository
+- **Fixed:** Updated `.gitignore` with correct path pattern for zsh sessions
+- **Cleaned:** Removed 7 state/cache files from git tracking (kept locally)
 
 ### 3.3.2 (2026-01-07)
 - **Fixed:** Ghostty Option key now sends Alt/Meta for fzf Alt-C keybinding
