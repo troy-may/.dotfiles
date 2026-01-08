@@ -45,7 +45,7 @@ FORBIDDEN_PATTERNS=(
     "\.swo$"
     "\.vscode/"
     "\.idea/"
-    "*\.code-workspace$"
+    "\.code-workspace$"
 
     # Language artifacts
     "__pycache__/"
@@ -58,7 +58,7 @@ FORBIDDEN_PATTERNS=(
     "\.log$"
     "\.bak$"
     "\.tmp$"
-    "*~$"
+    "~$"
 )
 
 # Get list of files staged for commit
