@@ -29,6 +29,7 @@
 /.config/zsh/*.zwc
 # Zsh session state
 /.config/zsh/.zsh_sessions/
+/.config/zsh/sessions/.zsh_sessions/
 # Zsh command history
 /.config/zsh/.zsh_history
 # Alternate Zsh history file
