@@ -1,5 +1,5 @@
 # .dotfiles
-3.4.2
+3.4.3
 📁 Personal dotfiles setup for macOS (and adaptable to Linux).
 Clean, modular, XDG-compliant, and deliberately boring.
 
@@ -222,6 +222,11 @@ See `hooks/README.md` for full documentation.
 **Local environment and secrets:**
 - All files matching `env.*.zsh` pattern
 - Example: `env.anthropic.zsh`, `env.local.zsh`
+
+**AI/ML CLI tools:**
+- `.claude/` (Claude Code CLI session data)
+- `.openai/` (OpenAI CLI data)
+- `.codex/` (Codex CLI data)
 
 These files may exist inside the repo path at runtime due to symlinks,
 but they must **never be tracked**.
@@ -605,6 +610,11 @@ MIT — use, adapt, and simplify freely.
 ---
 
 ## Changelog
+
+### 3.4.3 (2026-01-08)
+- **Added:** AI/ML CLI tool directories to gitignore (`.claude/`, `.openai/`, `.codex/`)
+- **Updated:** Pre-commit hook to block these session data directories
+- **Improved:** Protection against accidentally committing Claude Code, OpenAI, and Codex session files
 
 ### 3.4.2 (2026-01-08)
 - **Fixed:** Hardcoded username path in .zshrc replaced with $HOME variable
