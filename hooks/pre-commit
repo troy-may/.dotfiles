@@ -59,6 +59,11 @@ FORBIDDEN_PATTERNS=(
     "\.bak$"
     "\.tmp$"
     "~$"
+
+    # AI/ML CLI tools
+    "\.claude/"
+    "\.openai/"
+    "\.codex/"
 )
 
 # Get list of files staged for commit

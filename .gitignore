@@ -150,3 +150,8 @@ yarn.lock
 .google-cookie
 # LM Studio artifact
 .lmstudio-home-pointer
+# Claude Code CLI session data
+.claude/
+# OpenAI CLI and Codex data
+.openai/
+.codex/
