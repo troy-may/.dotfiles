@@ -66,12 +66,12 @@ The goal is a boring, predictable shell environment with clear boundaries betwee
 
 ```text
 .dotfiles/
-├── bootstrap.sh               # Symlink XDG config + install git hooks + wire zsh entrypoints
+├── bootstrap.sh               # Symlink XDG config + install git hooks + wire zsh entrypoints safely
 ├── preflight.sh               # Verify zsh ZDOTDIR wiring + entrypoint stubs + essential PATH/tools
 ├── README.md                  # This file (authoritative documentation)
 ├── .gitignore                 # Enforces config vs state vs secrets boundary
 ├── .gitattributes             # Line ending normalization
-├── .zshrc                     # Stub delegating to ~/.config/zsh/.zshrc
+├── .zshrc                     # Canonical stub template (bootstrap installs to ~/.zshrc)
 ├── hooks/                     # Git hooks for repository safety
 │   ├── pre-commit             # Prevents committing state/secret files
 │   └── README.md              # Hook documentation
@@ -83,7 +83,8 @@ The goal is a boring, predictable shell environment with clear boundaries betwee
     │   │   ├── extract.fish
     │   │   ├── backup_dotfiles.fish
     │   │   └── br.fish        # Broot integration (auto-generated)
-    │   └── completions/       # Carapace-generated completions
+    │   ├── completions/       # Auto-generated (gitignored, may be empty)
+    │   └── conf.d/            # Auto-generated (gitignored, may be empty)
     ├── zsh/                   # Zsh configuration (fallback)
     │   ├── .zprofile          # Login-shell init (macOS Terminal/iTerm/etc)
     │   ├── .zshenv            # ZDOTDIR + base invariants
@@ -96,7 +97,7 @@ The goal is a boring, predictable shell environment with clear boundaries betwee
     ├── ghostty/
     │   ├── config             # Terminal emulator configuration
     │   └── themes/            # Custom color schemes
-    │       └── My Custom Dark # Example custom theme
+    │       └── My Theme       # Example custom theme
     └── aerospace/
         └── aerospace.toml     # AeroSpace tiling window manager config
 
@@ -136,6 +137,8 @@ Zsh is wired so that:
 	•	ZDOTDIR=~/.config/zsh forces zsh to load everything from XDG config
 	•	~/.zshrc is a tiny stub that delegates to ~/.config/zsh/.zshrc
 (so tools that insist on ~/.zshrc still behave correctly)
+
+Bootstrap installs ~/.zshrc as a regular stub file (not a symlink) for maximum compatibility.
 
 Required symlink:
 
@@ -184,7 +187,7 @@ The rule
 	•	Configuration → committed
 	•	State / cache / history / secrets → ignored
 
-Because this setup uses XDG paths and symlinks (~/.config → ~/.dotfiles/.config), runtime artifacts can appear inside the repo path unless explicitly ignored.
+Because this setup uses XDG paths and symlinks (~/.config → ~/.dotfiles/.config), macOS and runtime state files may physically exist on disk inside the repo tree. The invariant is that they remain gitignored and never tracked. A clean `git status` is the measure of correctness, not the absence of state files on disk.
 
 .gitignore is part of the architecture, not an afterthought.
 
@@ -375,7 +378,16 @@ Restart your terminal afterward.
 
 ⸻
 
-6) Verify wiring
+6) Run preflight checks
+
+cd ~/.dotfiles
+./preflight.sh
+
+This verifies that zsh ZDOTDIR wiring, entrypoint stubs, and essential PATH/tools are correctly configured.
+
+⸻
+
+7) Verify wiring (optional manual checks)
 
 Zsh fallback:
 

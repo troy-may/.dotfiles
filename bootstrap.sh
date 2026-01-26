@@ -1,5 +1,5 @@
 # bootstrap.sh
-# version: 2026-01-26.3
+# version: 2026-01-26.4
 # purpose: symlink XDG config + install git hooks + wire zsh entrypoints safely
 # invariants:
 #   - repo is source of truth (never overwrite config content)
@@ -92,27 +92,39 @@ fi
 
 # 2) ~/.zshrc should be a tiny stub for tools that insist on it
 #    (zsh itself should load from $ZDOTDIR/.zshrc)
-ZSHRC_STUB_CONTENT=$'# ~/.zshrc (stub)\n# Delegates to XDG zsh config in $ZDOTDIR.\n# Source of truth: ~/.config/zsh/.zshrc\n\nexport ZDOTDIR="${ZDOTDIR:-$HOME/.config/zsh}"\n[[ -f "$ZDOTDIR/.zshrc" ]] && source "$ZDOTDIR/.zshrc"\n'
+#    Use the canonical stub from repo root as the source of truth
+ZSHRC_STUB_SOURCE="$DOTFILES/.zshrc"
 
-if [[ -e "$ZSHRC_LINK" && ! -L "$ZSHRC_LINK" ]]; then
-  # Only replace if it isn’t already the expected stub
-  if ! grep -q 'Delegates to XDG zsh config' "$ZSHRC_LINK" 2>/dev/null; then
-    warn "Backing up existing $ZSHRC_LINK to $ZSHRC_LINK.bak"
-    mv "$ZSHRC_LINK" "$ZSHRC_LINK.bak"
-    printf "%s" "$ZSHRC_STUB_CONTENT" > "$ZSHRC_LINK"
+if [[ ! -f "$ZSHRC_STUB_SOURCE" ]]; then
+  warn "Missing $ZSHRC_STUB_SOURCE — cannot install ~/.zshrc stub"
+else
+  if [[ -e "$ZSHRC_LINK" && ! -L "$ZSHRC_LINK" ]]; then
+    # Only replace if it isn't already the expected stub
+    if ! grep -q 'delegate to XDG zsh config' "$ZSHRC_LINK" 2>/dev/null; then
+      warn "Backing up existing $ZSHRC_LINK to $ZSHRC_LINK.bak"
+      mv "$ZSHRC_LINK" "$ZSHRC_LINK.bak"
+      cp "$ZSHRC_STUB_SOURCE" "$ZSHRC_LINK"
+      info "✓ Wrote ~/.zshrc stub"
+    else
+      info "✓ ~/.zshrc stub already present"
+    fi
+  elif [[ -L "$ZSHRC_LINK" ]]; then
+    # If it's a symlink, prefer replacing it with a real stub file (more robust)
+    warn "~/.zshrc is a symlink; replacing with a stub file"
+    rm -f "$ZSHRC_LINK"
+    cp "$ZSHRC_STUB_SOURCE" "$ZSHRC_LINK"
     info "✓ Wrote ~/.zshrc stub"
   else
-    info "✓ ~/.zshrc stub already present"
+    cp "$ZSHRC_STUB_SOURCE" "$ZSHRC_LINK"
+    info "✓ Wrote ~/.zshrc stub"
   fi
-elif [[ -L "$ZSHRC_LINK" ]]; then
-  # If it's a symlink, prefer replacing it with a real stub file (more robust)
-  warn "~/.zshrc is a symlink; replacing with a stub file"
-  rm -f "$ZSHRC_LINK"
-  printf "%s" "$ZSHRC_STUB_CONTENT" > "$ZSHRC_LINK"
-  info "✓ Wrote ~/.zshrc stub"
-else
-  printf "%s" "$ZSHRC_STUB_CONTENT" > "$ZSHRC_LINK"
-  info "✓ Wrote ~/.zshrc stub"
+fi
+
+# 3) Verify ~/.config/zsh/.zprofile exists (zsh loads it automatically under ZDOTDIR)
+ZPROFILE_TARGET="$ZSHCONFIG/.zprofile"
+if [[ ! -f "$ZPROFILE_TARGET" ]]; then
+  warn "Missing $ZPROFILE_TARGET — login shells may lack environment setup"
+  warn "Note: zsh will load this automatically from ZDOTDIR if present"
 fi
 
 # =====================================================
@@ -122,6 +134,10 @@ info "Setting up Fish (primary shell)..."
 
 if [[ -d "$FISHCONFIG" ]]; then
   success "✓ Fish config present at $FISHCONFIG"
+  # Verify config.fish exists
+  if [[ ! -f "$FISHCONFIG/config.fish" ]]; then
+    warn "Missing $FISHCONFIG/config.fish — fish may not initialize correctly"
+  fi
 else
   warn "Fish config directory not found at $FISHCONFIG"
 fi
