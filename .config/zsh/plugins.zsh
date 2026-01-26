@@ -1,17 +1,9 @@
-# ~/.config/zsh/plugins.zsh — Optional Zsh Enhancements
-
-# =====================
-# Optional Plugins (Commented Out)
-# =====================
-# These are available if you want a nicer zsh experience
-# Fish has these built-in, so only needed for zsh fallback
+# ~/.config/zsh/plugins.zsh
+# version: 2026-01-26.1
+# purpose: optional enhancements for zsh fallback (off by default)
 
 # Autosuggestions (fish-like)
-# if [ -f /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
-#   source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-# fi
+# source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh 2>/dev/null
 
 # Syntax highlighting
-# if [ -f /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
-#   source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-# fi
+# source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null

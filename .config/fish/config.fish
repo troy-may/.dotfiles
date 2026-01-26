@@ -1,25 +1,37 @@
 # =====================================================
 # Fish Shell Configuration
 # =====================================================
-# Clean, minimal config for interactive shell work
-# Fallback to zsh for POSIX scripts: #!/bin/zsh
+# version: 2026-01-26.1
+# purpose: interactive spine (fish + starship + carapace + zoxide) with clean PATH
+# invariants:
+#   - no universal vars set here (no `set -U*`)
+#   - PATH is defined here (no installer footers appending PATH later)
+#   - zsh is fallback for POSIX-isms / legacy scripts
 
 if status is-interactive
     # =====================================================
     # Path Configuration (MUST BE FIRST)
     # =====================================================
-    # Add common development paths
-    fish_add_path $HOME/bin
-    fish_add_path $HOME/.local/bin
-    fish_add_path /opt/homebrew/bin
-    fish_add_path /opt/homebrew/sbin
+    # Homebrew first (so brew tools win)
+    fish_add_path -g /opt/homebrew/bin
+    fish_add_path -g /opt/homebrew/sbin
 
-    # GNU coreutils and sed (prefer over macOS defaults)
-    fish_add_path /opt/homebrew/opt/gnu-sed/libexec/gnubin
-    fish_add_path /opt/homebrew/opt/coreutils/libexec/gnubin
+    # Prefer GNU coreutils and sed over macOS defaults (only if you truly want this globally)
+    fish_add_path -g /opt/homebrew/opt/coreutils/libexec/gnubin
+    fish_add_path -g /opt/homebrew/opt/gnu-sed/libexec/gnubin
+
+    # User bins
+    fish_add_path -g $HOME/bin
+    fish_add_path -g $HOME/.local/bin
 
     # LM Studio
-    fish_add_path $HOME/.lmstudio/bin
+    fish_add_path -g $HOME/.lmstudio/bin
+
+    # pyenv (PATH entry only; init happens later)
+    if test -d $HOME/.pyenv
+        set -gx PYENV_ROOT $HOME/.pyenv
+        fish_add_path -g $PYENV_ROOT/bin
+    end
 
     # =====================================================
     # Environment Variables
@@ -40,27 +52,31 @@ if status is-interactive
     starship init fish | source
 
     # =====================================================
+    # zoxide (smart cd)
+    # =====================================================
+    if command -v zoxide >/dev/null
+        zoxide init fish | source
+    end
+
+    # =====================================================
     # Carapace Completions
     # =====================================================
-    # Modern completion engine with command descriptions
-    set -Ux CARAPACE_BRIDGES 'zsh,fish,bash,inshellisense'
-    carapace _carapace | source
-
+    # Keep this session-scoped (not universal) so config remains the source of truth.
+    set -gx CARAPACE_BRIDGES 'zsh,fish,bash,inshellisense'
+    if command -v carapace >/dev/null
+        carapace _carapace fish | source
+    end
+    
     # =====================================================
     # Python Environment (pyenv)
     # =====================================================
-    # Cross-shell compatible Python version manager
     if test -d $HOME/.pyenv
-        set -gx PYENV_ROOT $HOME/.pyenv
-        fish_add_path $PYENV_ROOT/bin
-        status --is-interactive; and pyenv init - | source
+        pyenv init - | source
     end
 
     # =====================================================
     # Node Version Manager (fnm)
     # =====================================================
-    # Fast Node Manager - cross-shell compatible (replaces nvm)
-    # Automatically switches Node versions based on .node-version or .nvmrc files
     if command -v fnm >/dev/null
         fnm env --use-on-cd | source
     end
@@ -68,7 +84,6 @@ if status is-interactive
     # =====================================================
     # fzf - Fuzzy Finder
     # =====================================================
-    # Official Fish integration for fzf
     if command -v fzf >/dev/null
         # Use fd for better file finding (respects .gitignore)
         if command -v fd >/dev/null
@@ -91,12 +106,9 @@ if status is-interactive
     # =====================================================
     # bat - Better cat
     # =====================================================
-    # Syntax highlighting for file viewing
     if command -v bat >/dev/null
         alias cat 'bat --style=auto'
         alias catt '/bin/cat'  # Keep original cat available
-
-        # bat with plain style (no line numbers, git info)
         alias batp 'bat --style=plain'
     end
 
@@ -108,7 +120,7 @@ if status is-interactive
     alias ... 'cd ../..'
     alias .... 'cd ../../..'
 
-    # Listing (using built-in ls for now)
+    # Listing
     alias ll 'ls -lah'
     alias la 'ls -a'
 
@@ -127,7 +139,7 @@ if status is-interactive
 
     # Utilities
     # Note: 'path' is a Fish builtin - don't override it!
-    alias showpath 'echo $PATH | tr " " "\n"'
+    alias showpath 'string join \n $PATH'
 
     # =====================================================
     # Fish-Specific Settings
