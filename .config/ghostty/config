@@ -38,3 +38,4 @@ theme = Catppuccin Mocha
 # Options: left, right, both, true (same as both)
 # Without this, Option types special characters (ç, √, etc.)
 macos-option-as-alt = true
+keybind = shift+enter=text:\x1b\r

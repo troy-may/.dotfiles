@@ -1,5 +1,5 @@
 # ~/.config/zsh/.zshrc
-# version: 2026-01-26.5
+# version: 2026-01-26.6
 # purpose: clean interactive zsh fallback (Starship + Carapace + zoxide)
 # invariants: no PATH edits here (except pruning a dead system-injected entry)
 
