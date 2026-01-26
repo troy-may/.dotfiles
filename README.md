@@ -66,8 +66,8 @@ The goal is a boring, predictable shell environment with clear boundaries betwee
 
 ```text
 .dotfiles/
-├── bootstrap.sh               # Install symlinks and base shell wiring
-├── preflight.sh               # Audit environment (ZDOTDIR, PATH, symlinks)
+├── bootstrap.sh               # Symlink XDG config + install git hooks + wire zsh entrypoints
+├── preflight.sh               # Verify zsh ZDOTDIR wiring + entrypoint stubs + essential PATH/tools
 ├── README.md                  # This file (authoritative documentation)
 ├── .gitignore                 # Enforces config vs state vs secrets boundary
 ├── .gitattributes             # Line ending normalization
